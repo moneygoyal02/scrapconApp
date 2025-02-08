@@ -24,10 +24,10 @@ const __dirname = path.dirname(__filename)
 const app = express()
 
 // Create uploads directory if it doesn't exist
-const uploadsDir = path.join(__dirname, "uploads")
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir)
-}
+// const uploadsDir = path.join(__dirname, "uploads")
+// if (!fs.existsSync(uploadsDir)) {
+//   fs.mkdirSync(uploadsDir)
+// }
 
 // Connect to MongoDB
 mongoose

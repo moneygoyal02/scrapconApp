@@ -1,31 +1,21 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:uuid/uuid.dart';
 
-void main() {
-  runApp(ChatScreen());
-}
-
-class ChatScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ChatPage(),
-    );
-  }
-}
-
 class ChatPage extends StatefulWidget {
+  const ChatPage({super.key});
+
   @override
-  _ChatPageState createState() => _ChatPageState();
+  State<ChatPage> createState() => _ChatPageState();
 }
 
 class _ChatPageState extends State<ChatPage> {
   final List<types.Message> _messages = [];
   final types.User _user = types.User(id: "1");
-  final types.User _otherUser = types.User(id: "2");
+  // final types.User _otherUser = types.User(id: "2");
 
   void _handleSendPressed(types.PartialText message) {
     final newMessage = types.TextMessage(
@@ -44,6 +34,8 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xFF17255A),
+        foregroundColor: Colors.white,
         title: Row(
           children: [
             CircleAvatar(
@@ -55,7 +47,6 @@ class _ChatPageState extends State<ChatPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("Karan", style: TextStyle(fontSize: 18)),
-                Text("+91-9825782698", style: TextStyle(fontSize: 12, color: Colors.grey)),
               ],
             ),
           ],
@@ -69,18 +60,41 @@ class _ChatPageState extends State<ChatPage> {
         messages: _messages,
         onSendPressed: _handleSendPressed,
         user: _user,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: "My Ads"),
-          BottomNavigationBarItem(icon: Icon(Icons.add), label: "Add"),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications), label: "Activity"),
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: "Account"),
-        ],
+        customBottomWidget: Container(
+          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(color: Color(0xFF17255A), width: 2.0),
+            ),
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Type a message',
+                      border: InputBorder.none,
+                    ),
+                    onSubmitted: (text) {
+                      if (text.isNotEmpty) {
+                        _handleSendPressed(types.PartialText(text: text));
+                      }
+                    },
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.send, color: Color(0xFF17255A)),
+                  onPressed: () {
+                    // Add your send button logic here
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

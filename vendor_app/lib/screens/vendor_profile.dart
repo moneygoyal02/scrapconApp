@@ -40,7 +40,7 @@ class VendorProfileScreen extends StatelessWidget {
               onPressed: () {},
               child: Text('View and Edit Profile'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF17255A),
+                backgroundColor: Color(0xFF186F1F),
                 foregroundColor: Colors.white,
               ),
             ),
@@ -85,7 +85,7 @@ class VendorProfileScreen extends StatelessWidget {
   required Widget destination,
 }) {
   return ListTile(
-    leading: Icon(icon, size: 30, color: const Color(0xFF17255A)),
+    leading: Icon(icon, size: 30, color: const Color(0xFF186F1F)),
     title: Text(
       title,
       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),

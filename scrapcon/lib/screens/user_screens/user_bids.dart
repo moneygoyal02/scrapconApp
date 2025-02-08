@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
+import 'user_message.dart';
 
 class MyAdsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Filter By:'),
-        actions: [
-          FilterChipWidget(label: 'wood'),
-          FilterChipWidget(label: 'more profit'),
-          FilterChipWidget(label: 'more rates'),
-        ],
+        title: Text('See Bids'),
+        backgroundColor: Color(0xFF17255A), 
+        foregroundColor: Colors.white,
       ),
       body: ListView.builder(
         padding: EdgeInsets.all(8.0),
@@ -59,15 +57,24 @@ class SellerCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Karan', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                    Text('+91-9234567872', style: TextStyle(color: Colors.grey)),
                   ],
                 ),
-                Spacer(),
                 Icon(Icons.flag_outlined),
+                Spacer(),
+                Icon(Icons.thumb_up_alt_outlined),
+                IconButton(
+                  icon: Icon(Icons.message_rounded),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ChatPage()), // Replace MessageScreen with your target screen
+                    );
+                  },
+                ),
               ],
             ),
             SizedBox(height: 8),
-            Text('Sector 80, AB Road, New Delhi, India', style: TextStyle(fontWeight: FontWeight.w500)),
+            Text('Sector 80, AB Road,Delhi, India', style: TextStyle(fontWeight: FontWeight.w500)),
             SizedBox(height: 8),
             infoRow('Areas served:', 'Chandigarh & nearby areas'),
             infoRow('Job Success score:', 'At least 90%'),

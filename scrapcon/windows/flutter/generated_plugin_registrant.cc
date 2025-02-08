@@ -6,17 +6,18 @@
 
 #include "generated_plugin_registrant.h"
 
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
 #include <file_selector_windows/file_selector_windows.h>
+#include <url_launcher_windows/url_launcher_windows.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
   FileSelectorWindowsRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FileSelectorWindows"));
-=======
+=========
 #include <url_launcher_windows/url_launcher_windows.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
   UrlLauncherWindowsRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("UrlLauncherWindows"));
->>>>>>> 8b4ef37b3f7124fbf49c0b607630fa5f28beb957
+>>>>>>>>> Temporary merge branch 2
 }

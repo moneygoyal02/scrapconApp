@@ -3,11 +3,11 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
   file_selector_windows
-=======
+=========
   url_launcher_windows
->>>>>>> 8b4ef37b3f7124fbf49c0b607630fa5f28beb957
+>>>>>>>>> Temporary merge branch 2
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

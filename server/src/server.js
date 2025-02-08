@@ -80,6 +80,9 @@ app.use("/api/scrap-categories", scrapCategoryRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.get("/api/leaderboard", getAllUsers);
+app.get("/", (req, res) => {
+  res.send("Server is running");
+});
 
 // Error handling middleware
 app.use(notFoundHandler);

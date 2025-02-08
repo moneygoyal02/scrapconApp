@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'onboarding_screen.dart';
 import 'passwords.dart'; // Import the passwords.dart file
+import 'token_provider.dart';
+import 'package:provider/provider.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -33,10 +35,11 @@ class _SignupScreenState extends State<SignupScreen> {
     if (response.statusCode == 201) {
       final data = json.decode(response.body);
       final token = data['token']; 
+      Provider.of<TokenProvider>(context, listen: false).setToken(token);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => OnboardingScreen(token: token), 
+          builder: (context) => OnboardingScreen(), 
         ),
       );
     } else {

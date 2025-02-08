@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'onboarding_screen.dart';
 import 'passwords.dart'; // Import the passwords.dart file
+import 'package:provider/provider.dart';
+import 'token_provider.dart'; // Import the TokenProvider
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
@@ -24,10 +26,14 @@ class LoginScreen extends StatelessWidget {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       final token = data['token'];
+      
+      // Set the token in the provider
+      Provider.of<TokenProvider>(context, listen: false).setToken(token);
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => OnboardingScreen(token: token),
+          builder: (context) => OnboardingScreen(),
         ),
       );
     } else {

@@ -7,6 +7,6 @@ class TokenProvider with ChangeNotifier {
 
   void setToken(String token) {
     _token = token;
-    notifyListeners(); // Notify listeners about the change
+    notifyListeners(); 
   }
 } 

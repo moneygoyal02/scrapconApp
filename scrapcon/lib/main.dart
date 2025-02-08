@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'screens/token_provider.dart';
 import 'screens/splash_screen.dart';
-
 void main() {
-  runApp(ScrapconApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => TokenProvider(),
+      child: ScrapconApp(),
+    ),
+  );
 }
 
 class ScrapconApp extends StatelessWidget {

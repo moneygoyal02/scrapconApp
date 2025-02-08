@@ -6,9 +6,8 @@ import 'passwords.dart';
 import 'notifications_screen.dart';
 // import 'dashboard_screen.dart';
 class OnboardingScreen extends StatelessWidget {
-  final String token;
 
-  const OnboardingScreen({super.key, required this.token});
+  const OnboardingScreen({super.key});
 
   Future<void> _showNearbyScrapers() async {
     try {

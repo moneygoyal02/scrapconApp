@@ -68,7 +68,7 @@ class VendorLoginScreen extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () => _loginAsVendor(context),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF17255A),
+                      backgroundColor: Color(0xFF186F1F),
                       foregroundColor: Colors.white,
                       padding: EdgeInsets.symmetric(vertical: 15, horizontal: 100),
                       textStyle: TextStyle(fontSize: 18),

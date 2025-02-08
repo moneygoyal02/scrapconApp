@@ -9,7 +9,8 @@ import { notFoundHandler } from "./middleware/notFoundHandler.js"
 import userRoutes from "./api/routes/userRoutes.js"
 import vendorRoutes from "./api/routes/vendorRoutes.js"
 import pickupRoutes from "./api/routes/pickupRoutes.js"
-
+import reviewRoutes from "./api/routes/reviewRoutes.js"
+import scrapCategoryRoutes from "./api/routes/scrapCategoryRoutes.js"
 import adminRoutes from "./api/routes/adminRoutes.js"
 
 const app = express()
@@ -33,9 +34,12 @@ app.use(express.json())
 app.use("/api/users", userRoutes)
 app.use("/api/vendors", vendorRoutes)
 app.use("/api/pickups", pickupRoutes)
-
+app.use("/api/scrap-categories", scrapCategoryRoutes)
 app.use("/api/admin", adminRoutes)
-
+app.use("/api/reviews", reviewRoutes)
+//import controller for leaderboard
+import {getAllUsers} from "./api/controllers/leaderboardController.js"
+app.get("/api/leaderboard", getAllUsers)
 
 // Error handling
 app.use(notFoundHandler)

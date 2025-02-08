@@ -6,12 +6,9 @@ import { uploadImage } from "../../services/cloudinaryService.js";
 export const placeBid = async (req, res, next) => {
   try {
     const { scheduledDate, items } = req.body;
-    console.log(req.files);
-    console.log(req.body);
-    console.log("Request headers:", req.headers)
-
-    // Ensure an image file is attached (named "bidImage" in the form-data)
-    if (!req.file) {
+    
+    // Check if file exists in the request
+    if (!req.file || !req.file.buffer) {
       res.status(400);
       throw new Error("Bid image is required");
     }
@@ -30,15 +27,22 @@ export const placeBid = async (req, res, next) => {
       throw new Error("Customer address not found");
     }
 
-    // Upload the image to Cloudinary (using in-memory file from multer)
-    const imageUrl = await uploadImage(req.file);
+    // Upload the image to Cloudinary
+    let imageUrl;
+    try {
+      imageUrl = await uploadImage(req.file);
+    } catch (error) {
+      console.error("Image upload error:", error);
+      res.status(400);
+      throw new Error("Failed to upload image");
+    }
 
     // Create and save the new bid
     const bid = new Bid({
       customer: customer._id,
       scheduledDate,
       address: address._id,
-      items, // Ensure items is a string (if needed, adjust conversion here)
+      items,
       image: imageUrl,
     });
 

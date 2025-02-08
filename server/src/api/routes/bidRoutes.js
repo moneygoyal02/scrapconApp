@@ -9,30 +9,33 @@ const storage = multer.memoryStorage()
 const upload = multer({
   storage: storage,
   fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith("image/")) {
-      cb(null, true)
-    } else {
-      cb(new Error("Not an image! Please upload an image."), false)
+    // Accept images only
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+      return cb(new Error('Only image files are allowed!'), false);
     }
-  },
+    cb(null, true);
+  }
 }).single("bidImage")
+
+const uploadMiddleware = (req, res, next) => {
+  upload(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      // A Multer error occurred when uploading
+      res.status(400).json({ message: `Upload error: ${err.message}` });
+    } else if (err) {
+      // An unknown error occurred
+      res.status(400).json({ message: `Unknown error: ${err.message}` });
+    } else {
+      // Everything went fine
+      next();
+    }
+  });
+};
 
 router.post(
   "/placeBid",
   protect,
-  (req, res, next) => {
-    upload(req, res, (err) => {
-      if (err instanceof multer.MulterError) {
-        // A Multer error occurred when uploading.
-        return res.status(400).json({ message: `Multer uploading error: ${err.message}` })
-      } else if (err) {
-        // An unknown error occurred when uploading.
-        return res.status(400).json({ message: `Unknown uploading error: ${err.message}` })
-      }
-      // Everything went fine.
-      next()
-    })
-  },
+  uploadMiddleware,
   placeBid,
 )
 

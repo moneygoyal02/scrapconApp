@@ -1,7 +1,7 @@
 import express from "express"
 import multer from "multer"
 import { protect, vendorOnly } from "../../middleware/authMiddleware.js";
-import { placeBid } from "../controllers/bidController.js"
+import { placeBid, getAllBids } from "../controllers/bidController.js"
 
 const router = express.Router()
 
@@ -37,6 +37,12 @@ router.post(
   protect,
   uploadMiddleware,
   placeBid,
+)
+
+router.get(
+  "/getAll",
+  protect,
+  getAllBids
 )
 
 export default router

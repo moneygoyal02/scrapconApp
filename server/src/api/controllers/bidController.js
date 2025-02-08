@@ -56,3 +56,27 @@ export const placeBid = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getAllBids = async (req, res, next) => {
+  try {
+    // Find all bids and populate customer and address details
+    const bids = await Bid.find()
+      .populate({
+        path: 'customer',
+        select: 'name email phone' // Select the fields you want to include
+      })
+      .populate({
+        path: 'address',
+        select: 'street city state zipCode' // Select the fields you want to include
+      })
+      .sort({ createdAt: -1 }); // Sort by newest first
+
+    res.status(200).json({
+      success: true,
+      count: bids.length,
+      bids: bids
+    });
+  } catch (error) {
+    next(error);
+  }
+};

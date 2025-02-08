@@ -7,6 +7,8 @@ import { config } from "./config/index.js"
 import { errorHandler } from "./middleware/errorHandler.js"
 import { notFoundHandler } from "./middleware/notFoundHandler.js"
 import userRoutes from "./api/routes/userRoutes.js"
+import vendorRoutes from "./api/routes/vendorRoutes.js"
+import pickupRoutes from "./api/routes/pickupRoutes.js"
 
 
 const app = express()
@@ -28,6 +30,8 @@ app.use(express.json())
 
 // Routes
 app.use("/api/users", userRoutes)
+app.use("/api/vendors", vendorRoutes)
+app.use("/api/pickups", pickupRoutes)
 
 
 // Error handling

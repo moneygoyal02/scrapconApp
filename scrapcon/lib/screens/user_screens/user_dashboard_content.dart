@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';// Import the SupportAgentScreen class
+import 'user_message.dart';
+import 'package:scrapcon/screens/user_screens/user_message.dart';
 
 class UserDashboardContent extends StatelessWidget {
   @override
@@ -54,6 +56,20 @@ class UserDashboardContent extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+        ),
+        Positioned(
+          bottom: 16.0,
+          right: 16.0,
+          child: FloatingActionButton(
+            onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ChatPage()),
+                );
+            },
+            backgroundColor: Color(0xFF17255A),
+            child: Icon(Icons.support_agent),
           ),
         ),
       ],

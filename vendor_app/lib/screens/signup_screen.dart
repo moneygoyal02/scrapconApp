@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:vendor_app/screens/dashboard_screen.dart';
 import 'dart:convert';
-import 'onboarding_screen.dart';
 import 'passwords.dart'; // Import the passwords.dart file
 
 class SignupScreen extends StatefulWidget {
@@ -36,7 +36,7 @@ class _SignupScreenState extends State<SignupScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => OnboardingScreen(), 
+          builder: (context) => VendorDashboardScreen(), 
         ),
       );
     } else {
@@ -86,7 +86,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ElevatedButton(
                     onPressed: _signup,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF17255A),
+                      backgroundColor: Color(0xFF186F1F),
                       foregroundColor: Colors.white,
                       padding: EdgeInsets.symmetric(vertical: 15, horizontal: 100),
                       textStyle: TextStyle(fontSize: 18),

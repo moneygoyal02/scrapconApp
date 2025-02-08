@@ -1,19 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: BuyPackagesScreen(),
-    );
-  }
-}
-
 class BuyPackagesScreen extends StatelessWidget {
   final List<Map<String, String>> options = [
     {"title": "Buy packages", "subtitle": "Sell faster, more & higher margins with packages"},

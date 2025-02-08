@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'passwords.dart'; // Import the passwords.dart file
-import 'vendor_screens/dashboard_screen.dart'; 
+import 'dashboard_screen.dart'; 
 
 class VendorLoginScreen extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
@@ -68,7 +68,7 @@ class VendorLoginScreen extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () => _loginAsVendor(context),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF17255A),
+                      backgroundColor: Color(0xFF186F1F),
                       foregroundColor: Colors.white,
                       padding: EdgeInsets.symmetric(vertical: 15, horizontal: 100),
                       textStyle: TextStyle(fontSize: 18),

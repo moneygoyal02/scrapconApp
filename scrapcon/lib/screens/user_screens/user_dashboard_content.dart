@@ -1,8 +1,55 @@
 import 'package:flutter/material.dart';// Import the SupportAgentScreen class
 import 'user_message.dart';
-import 'package:scrapcon/screens/user_screens/user_message.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:provider/provider.dart';
+import '../token_provider.dart';
+import '../passwords.dart';
 
-class UserDashboardContent extends StatelessWidget {
+class UserDashboardContent extends StatefulWidget {
+  @override
+  _UserDashboardContentState createState() => _UserDashboardContentState();
+}
+
+class _UserDashboardContentState extends State<UserDashboardContent> {
+  List<dynamic> _bids = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchBids();
+  }
+
+  Future<void> _fetchBids() async {
+    try {
+      final token = Provider.of<TokenProvider>(context, listen: false).token;
+      final url = '${Passwords.backendUrl}/api/bids/getAll';
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          _bids = data['bids'];
+          _isLoading = false;
+        });
+      } else {
+        print('Failed to fetch bids: ${response.body}');
+        setState(() => _isLoading = false);
+      }
+    } catch (error) {
+      print('Error fetching bids: $error');
+      setState(() => _isLoading = false);
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -11,20 +58,26 @@ class UserDashboardContent extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // Hardcoded list items
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      leading: Icon(Icons.timer_outlined),
-                      title: Text('Wood'),
-                      subtitle: Text('To: ABC Scrapers'),
-                      trailing: Text('x20\n\$400'),
-                    );
-                  },
-                ),
+                // Bids list
+                _isLoading
+                    ? Center(child: CircularProgressIndicator())
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: _bids.length,
+                        itemBuilder: (context, index) {
+                          final bid = _bids[index];
+                          final items = json.decode(bid['items']);
+                          final firstItem = items[0]; // Assuming at least one item exists
+
+                          return ListTile(
+                            leading: Icon(Icons.timer_outlined),
+                            title: Text('${firstItem['category']}'),
+                            subtitle: Text('To: ${bid['address']['city']}, ${bid['address']['state']}'),
+                            trailing: Text('${firstItem['quantity']} ${firstItem['unit']}'),
+                          );
+                        },
+                      ),
                 SizedBox(height: 20),
                 // Suggestions section
                 Padding(
@@ -32,7 +85,8 @@ class UserDashboardContent extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Suggestions', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      Text('Suggestions', 
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),

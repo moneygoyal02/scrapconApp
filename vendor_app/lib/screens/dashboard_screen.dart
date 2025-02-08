@@ -33,16 +33,9 @@ class _VendorDashboardScreenState extends State<VendorDashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            ['Dashboard', 'Activity', 'Explore', 'Account'][_currentIndex],
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
         backgroundColor: Color(0xFF186F1F),
         foregroundColor: Colors.white,
-        elevation: 0,
+        title: Text(['Dashboard', 'Activity', 'Explore', 'Account'][_currentIndex]),
       ),
       body: _screens[_currentIndex], 
       bottomNavigationBar: VendorBottomNavBar(

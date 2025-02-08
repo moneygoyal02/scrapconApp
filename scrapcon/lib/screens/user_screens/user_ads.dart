@@ -9,11 +9,11 @@ class UserAdsScreen extends StatelessWidget {
         itemCount: 3, // Example item count
         itemBuilder: (context, index) {
           return AdCard(
-            title: "Wood",
+            title: "Metal",
             quantity: 15,
             location: "Sector 80, GB Road, New Delhi, India",
             dueDate: "17/08/2025",
-            imageUrl: "https://fastly.picsum.photos/id/237/250/250.jpg?hmac=tNmO3YWXALG9JM81cghI9nflo3dWc3e5vlNsf_jmKWw", // Replace with your image URL
+            imageUrl: "https://media.istockphoto.com/id/151540540/photo/crane-picking-up-car.jpg?s=2048x2048&w=is&k=20&c=nr6Cwhy-7tBaJCNRQ8m1qO0CshPm5WpxO3pEiRZlq9w=", // Replace with your image URL
             onTap: () {
               // Handle the "See Bid" button press here
               print("See Bid tapped for Ad #$index");

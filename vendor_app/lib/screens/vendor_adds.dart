@@ -25,7 +25,7 @@ class BuyPackagesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Buy Packages & My Orders"),
-        backgroundColor: Color(0xFF17255A),
+        backgroundColor: Color(0xFF186F1F),
         foregroundColor: Colors.white,
       ),
       body: ListView.builder(

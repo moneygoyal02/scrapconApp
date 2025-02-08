@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'passwords.dart'; // Import the passwords.dart file
-import 'vendor_screens/dashboard_screen.dart'; 
+import 'package:provider/provider.dart';
+import '../token_provider.dart';
+import 'dashboard_screen.dart';
 
-class VendorLoginScreen extends StatelessWidget {
+class LoginScreen extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  VendorLoginScreen({super.key});
+  LoginScreen({super.key});
 
-  Future<void> _loginAsVendor(BuildContext context) async {
+  Future<void> _login(BuildContext context) async {
     final url = '${Passwords.backendUrl}/api/vendors/login'; // Use the constant
     final response = await http.post(
       Uri.parse(url),
@@ -24,15 +26,18 @@ class VendorLoginScreen extends StatelessWidget {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       final token = data['token'];
+      
+      // Set the token in the provider
+      Provider.of<TokenProvider>(context, listen: false).setToken(token);
+
       Navigator.pushReplacement(
-        // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(
           builder: (context) => VendorDashboardScreen(), // Redirect to VendorDashboardScreen
         ),
       );
     } else {
-      print('Vendor login failed: ${response.body}');
+      print('Login failed: ${response.body}');
     }
   }
 
@@ -42,10 +47,10 @@ class VendorLoginScreen extends StatelessWidget {
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 100),
+            padding: EdgeInsets.only(top: 100, bottom: 50),
             child: Text(
-              'Vendor Sign In',
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+              'Sign In',
+              style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
           ),
@@ -66,9 +71,9 @@ class VendorLoginScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () => _loginAsVendor(context),
+                    onPressed: () => _login(context),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF17255A),
+                      backgroundColor: Color(0xFF186F1F),
                       foregroundColor: Colors.white,
                       padding: EdgeInsets.symmetric(vertical: 15, horizontal: 100),
                       textStyle: TextStyle(fontSize: 18),

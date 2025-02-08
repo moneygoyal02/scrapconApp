@@ -12,16 +12,12 @@ import pickupRoutes from "./api/routes/pickupRoutes.js";
 import reviewRoutes from "./api/routes/reviewRoutes.js";
 import scrapCategoryRoutes from "./api/routes/scrapCategoryRoutes.js";
 import adminRoutes from "./api/routes/adminRoutes.js";
-// Import controller for leaderboard
 import { getAllUsers } from "./api/controllers/leaderboardController.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
-
-// Import the Google Cloud Vision client
 import { ImageAnnotatorClient } from "@google-cloud/vision";
 
-// Determine __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -42,9 +38,15 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((error) => console.error("MongoDB connection error:", error));
 
-// Initialize the Google Cloud Vision client
-const keyFilename = path.join(__dirname, "keys.json");
-const visionClient = new ImageAnnotatorClient({ keyFilename });
+// Initialize the Google Cloud Vision client using environment variable credentials
+const credentialsString = process.env.GOOGLE_CREDENTIALS;
+
+if (!credentialsString) {
+  throw new Error("GOOGLE_CREDENTIALS environment variable is not set.");
+}
+const credentials = JSON.parse(credentialsString);
+
+const visionClient = new ImageAnnotatorClient({ credentials });
 
 // Define the /detect endpoint
 app.post("/detect", async (req, res, next) => {
@@ -78,6 +80,9 @@ app.use("/api/scrap-categories", scrapCategoryRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.get("/api/leaderboard", getAllUsers);
+app.get("/", (req, res) => {
+  res.send("Server is running");
+});
 
 // Error handling middleware
 app.use(notFoundHandler);

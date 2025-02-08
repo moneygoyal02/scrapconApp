@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-// import '../../vendor_screens/vendor_explore.dart';
-// import '../../vendor_screens/vendor_activity.dart';
-// import '../../vendor_screens/vendor_profile.dart';
 
 class VendorBottomNavBar extends StatelessWidget {
   final int currentIndex;

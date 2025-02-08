@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'login_screen.dart';
 import 'signup_screen.dart';
-import 'vendor_login_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   @override
@@ -57,22 +56,6 @@ class WelcomeScreen extends StatelessWidget {
                   child: Text('Create Account'),
                 ),
                 SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => VendorLoginScreen()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF17255A),
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 100),
-                    textStyle: TextStyle(fontSize: 18),
-                  ),
-                  child: Text('Login as a Vendor'),
-                ),
-                SizedBox(height: 30),
               ],
             ),
           ),

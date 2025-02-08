@@ -67,7 +67,7 @@ class VendorExploreScreen extends StatelessWidget {
                 Navigator.of(context).pop();
                 // Add your bidding logic here
               },
-              style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF17255A)),
+              style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF186F1F)),
               child: Text(
                 'Place Bid',
                 style: TextStyle(color: Colors.white),
@@ -137,7 +137,7 @@ class AdCard extends StatelessWidget {
                       onPressed: onTap,
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        backgroundColor: Color(0xFF17255A),
+                        backgroundColor: Color(0xFF186F1F),
                       ),
                       child: Text('See Bid', style: TextStyle(color: Colors.white)),
                     ),

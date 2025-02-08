@@ -25,10 +25,9 @@ class LoginScreen extends StatelessWidget {
       final data = json.decode(response.body);
       final token = data['token'];
       Navigator.pushReplacement(
-        // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(
-          builder: (context) => OnboardingScreen(),
+          builder: (context) => OnboardingScreen(token: token),
         ),
       );
     } else {

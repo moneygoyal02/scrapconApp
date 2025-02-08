@@ -36,7 +36,7 @@ class _SignupScreenState extends State<SignupScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => OnboardingScreen(), 
+          builder: (context) => OnboardingScreen(token: token), 
         ),
       );
     } else {

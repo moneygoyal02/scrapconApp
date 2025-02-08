@@ -44,8 +44,8 @@ class NotificationsScreen extends StatelessWidget {
             Center(
               child: SvgPicture.asset(
                 'assets/notification.svg',
-                height: 450,
-                width: 450,
+                height: 320,
+                width: 320,
               ),
             ),
             SizedBox(height: 30),

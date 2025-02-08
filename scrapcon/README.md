@@ -1,37 +1,16 @@
-# Scrapcon
+# scrapcon
 
-Scrapcon is a Flutter application designed to manage and display user dashboards, ads, profiles, and activities related to scrap materials. This project serves as a starting point for building a comprehensive scrap management application.
-
-## Features
-
-- User Dashboard: View and manage user-specific content.
-- Ads Management: Create, view, and manage ads related to scrap materials.
-- Profile Management: Users can view and edit their profiles.
-- Activity Tracking: Keep track of user activities related to scrap management.
-- Bottom Navigation: Easy navigation between different sections of the app.
+A new Flutter project.
 
 ## Getting Started
 
-To get started with the Scrapcon project, follow these steps:
+This project is a starting point for a Flutter application.
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/yourusername/scrapcon.git
-   cd scrapcon
-   ```
+A few resources to get you started if this is your first Flutter project:
 
-2. **Install dependencies:**
-   Make sure you have Flutter installed on your machine. Then run:
-   ```bash
-   flutter pub get
-   ```
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-3. **Run the application:**
-   You can run the application on an emulator or a physical device:
-   ```bash
-   flutter run
-   ```
-
-## Project Structure
-
-The project is structured as follows:
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.

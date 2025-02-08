@@ -12,7 +12,7 @@ class WelcomeScreen extends StatelessWidget {
         children: [
           Center(
             child: SvgPicture.asset(
-              'splash.svg',
+              'splash_main.svg',
               fit: BoxFit.cover, 
               width: MediaQuery.of(context).size.width, 
               height: MediaQuery.of(context).size.height * 0.9,

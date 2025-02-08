@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:provider/provider.dart';
 import '../token_provider.dart';
 import '../passwords.dart';
-
+import 'user_message.dart';
 class UserDashboardContent extends StatefulWidget {
   @override
   _UserDashboardContentState createState() => _UserDashboardContentState();
@@ -108,6 +108,20 @@ class _UserDashboardContentState extends State<UserDashboardContent> {
                 ),
               ],
             ),
+          ),
+        ),
+        Positioned(
+          bottom: 16.0,
+          right: 16.0,
+          child: FloatingActionButton(
+            onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ChatPage()),
+                );
+            },
+            backgroundColor: Color(0xFF17255A),
+            child: Icon(Icons.support_agent),
           ),
         ),
       ],

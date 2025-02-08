@@ -1,5 +1,21 @@
 import mongoose from "mongoose"
 
+const pickupItemSchema = new mongoose.Schema({
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "ScrapCategory",
+    required: true,
+  },
+  quantity: {
+    type: Number,
+    required: true,
+  },
+  unit: {
+    type: String,
+    required: true,
+  },
+})
+
 const pickupSchema = new mongoose.Schema(
   {
     customer: {
@@ -26,29 +42,16 @@ const pickupSchema = new mongoose.Schema(
       ref: "UserAddress",
       required: true,
     },
-    items: [
-      {
-        category: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "ScrapCategory",
-          required: true,
-        },
-        quantity: {
-          type: Number,
-          required: true,
-        },
-        unit: {
-          type: String,
-          required: true,
-          enum: ["gm", "kg"],
-        },
-      },
-    ],
+    items: [pickupItemSchema],
     totalAmount: {
       type: Number,
       default: 0,
     },
     notes: String,
+    image: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,

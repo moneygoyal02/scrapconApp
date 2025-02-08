@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'passwords.dart'; // Import the passwords.dart file
-import 'vendor_screens/dashboard_screen.dart'; 
+import 'dashboard_screen.dart'; 
 
 class VendorLoginScreen extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();

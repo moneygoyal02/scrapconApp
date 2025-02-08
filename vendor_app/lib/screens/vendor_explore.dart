@@ -59,7 +59,7 @@ class VendorExploreScreen extends StatelessWidget {
               onPressed: () => Navigator.of(context).pop(),
               child: Text(
                 'Cancel',
-                style: TextStyle(color: Color(0xFF17255A)),
+                style: TextStyle(color: Color(0xFF186F1F)),
               ),
             ),
             ElevatedButton(

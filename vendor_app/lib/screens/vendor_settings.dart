@@ -9,7 +9,7 @@ class SettingsScreen extends StatelessWidget {
           'Settings',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Color(0xFF17255A),
+        backgroundColor: Color(0xFF186F1F),
         foregroundColor: Colors.white,
         elevation: 1,
       ),

@@ -83,8 +83,8 @@ class OnboardingScreen extends StatelessWidget {
             Center(
               child: SvgPicture.asset(
                 'assets/home.svg', // Replace with your SVG path
-                height: 320,
-                width: 320,
+                height: 280,
+                width: 280,
               ),
             ),
             SizedBox(height: 150),

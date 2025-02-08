@@ -3,8 +3,50 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'user_adds_settings.dart';
 import 'user_settings.dart';
 import 'user_support.dart'; // Add this import statement
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:provider/provider.dart';
+import '../token_provider.dart'; 
+import '../passwords.dart';
 
-class UserProfileScreen extends StatelessWidget {
+class UserProfileScreen extends StatefulWidget {
+  @override
+  _UserProfileScreenState createState() => _UserProfileScreenState();
+}
+
+class _UserProfileScreenState extends State<UserProfileScreen> {
+  String? _name;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserProfile();
+  }
+
+  Future<void> _fetchUserProfile() async {
+    final token = Provider.of<TokenProvider>(context, listen: false).token;
+
+    final url = '${Passwords.backendUrl}/api/users/profile'; // Use the constant
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token', // Include the token in the headers
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (mounted) { // Check if the widget is still mounted
+        setState(() {
+          _name = data['name'];
+        });
+      }
+    } else {
+      print('Failed to fetch user profile: ${response.body}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,33 +64,60 @@ class UserProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileSection() {
-    return Row(
-      children: [
-        CircleAvatar(
-          radius: 40,
-          backgroundColor: Colors.grey[300],
-          child: Text('G', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-        ),
-        SizedBox(width: 16),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Gurshaan Singh', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            SizedBox(height: 5),
-            ElevatedButton(
-              onPressed: () {},
-              child: Text('View and Edit Profile'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF17255A),
-                foregroundColor: Colors.white,
+Widget _buildProfileSection() {
+  return Card(
+    elevation: 4,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    color: Colors.white,
+    child: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CircleAvatar(
+            radius: 30,
+            backgroundColor: Colors.grey.shade300,
+            child: Text(
+              _name != null && _name!.isNotEmpty ? _name![0].toUpperCase() : 'G',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurple,
               ),
             ),
-          ],
-        ),
-      ],
-    );
-  }
+          ),
+          SizedBox(width: 16),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                _name ?? 'Loading...',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              ElevatedButton(
+                onPressed: () {
+                  // Add your onPressed logic here
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF17255A),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                ),
+                child: Text('View and Edit Profile'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+
   Widget _buildSettingsOptions(BuildContext context) {
     return Column(
       children: [

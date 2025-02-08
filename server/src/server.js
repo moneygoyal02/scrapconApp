@@ -12,8 +12,22 @@ import pickupRoutes from "./api/routes/pickupRoutes.js"
 import reviewRoutes from "./api/routes/reviewRoutes.js"
 import scrapCategoryRoutes from "./api/routes/scrapCategoryRoutes.js"
 import adminRoutes from "./api/routes/adminRoutes.js"
+//import controller for leaderboard
+import {getAllUsers} from "./api/controllers/leaderboardController.js"
+import path from "path"
+import { fileURLToPath } from "url"
+import fs from "fs"
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const app = express()
+
+// Create uploads directory if it doesn't exist
+const uploadsDir = path.join(__dirname, "uploads")
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir)
+}
 
 // Connect to MongoDB
 mongoose
@@ -37,8 +51,6 @@ app.use("/api/pickups", pickupRoutes)
 app.use("/api/scrap-categories", scrapCategoryRoutes)
 app.use("/api/admin", adminRoutes)
 app.use("/api/reviews", reviewRoutes)
-//import controller for leaderboard
-import {getAllUsers} from "./api/controllers/leaderboardController.js"
 app.get("/api/leaderboard", getAllUsers)
 
 // Error handling

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'user_screens/dashboard_screen.dart'; // Import the DashboardScreen
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationsScreen extends StatelessWidget {
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +75,7 @@ class NotificationsScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: ElevatedButton(
-                onPressed: _requestNotificationPermission,
+                onPressed: () => _requestNotificationPermission(context),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF17255A),
                   padding: EdgeInsets.symmetric(vertical: 15),
@@ -118,26 +121,50 @@ class NotificationsScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _requestNotificationPermission() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
+  Future<void> _requestNotificationPermission(BuildContext context) async {
+    // Initialize the local notifications plugin
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
     // Request permission for iOS
-    await messaging.requestPermission(
-      alert: true,
-      badge: true,
-      provisional: false,
-      sound: true,
+    if (Theme.of(context).platform == TargetPlatform.iOS) {
+      // For iOS, you can show a dialog to ask for permission
+      // Note: You may need to handle this with a separate package for permissions
+      // or use a dialog to inform the user to enable notifications in settings.
+      print('Requesting iOS notification permissions...');
+    } else {
+      // For Android, permissions are granted at install time
+      print('Android does not require explicit permission for notifications.');
+    }
+
+    // You can now schedule notifications or show a notification
+    _showNotification();
+  }
+
+  Future<void> _showNotification() async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'your_channel_id',
+      'your_channel_name',
+      channelDescription: 'your_channel_description',
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: false,
     );
 
-    // if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-    //   print('User granted permission');
-    //   // Handle the case when permission is granted
-    // } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-    //   print('User granted provisional permission');
-    //   // Handle the case when provisional permission is granted
-    // } else {
-    //   print('User declined or has not accepted permission');
-    //   // Handle the case when permission is denied
-    // }
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Test Notification',
+      'This is a test notification',
+      platformChannelSpecifics,
+    );
   }
 }

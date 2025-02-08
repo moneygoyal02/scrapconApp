@@ -16,14 +16,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   final List<Widget> _screens = [
     UserDashboardContent(),
-    UserAdsScreen(
-      title: 'Ad Title',
-      quantity: 10,
-      location: 'Location',
-      dueDate: DateTime.now().toIso8601String(),
-      imageUrl: 'https://m.economictimes.com/news/india/plea-filed-in-delhi-hc-against-mandatory-scrapping-of-old-vehicles/articleshow/113495911.cms',
-      onTap: () {},
-    ),
+    UserAdsScreen(),
     UserAddScreen(),
     UserProfileScreen(),
     UserActivityScreen(),

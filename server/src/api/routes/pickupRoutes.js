@@ -1,21 +1,23 @@
-import express from "express"
-import multer from "multer"
-import { protect, vendorOnly } from "../../middleware/authMiddleware.js"
+import express from "express";
+import multer from "multer";
+import { protect, vendorOnly } from "../../middleware/authMiddleware.js";
 import {
   requestPickup,
   getVendorPickups,
   getCustomerPickups,
   updatePickupStatus,
-} from "../controllers/pickupController.js"
+} from "../controllers/pickupController.js";
 
-const router = express.Router()
+const router = express.Router();
 
-const upload = multer({ dest: "uploads/" })
+// Use in-memory storage instead of saving to disk
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
-router.post("/request", protect, upload.single("scrapImage"), requestPickup)
-router.get("/vendor", protect, vendorOnly, getVendorPickups)
-router.get("/customer", protect, getCustomerPickups)
-router.put("/:pickupId/status", protect, vendorOnly, updatePickupStatus)
+// The "scrapImage" file will now be available as req.file.buffer
+router.post("/request", protect, upload.single("scrapImage"), requestPickup);
+router.get("/vendor", protect, vendorOnly, getVendorPickups);
+router.get("/customer", protect, getCustomerPickups);
+router.put("/:pickupId/status", protect, vendorOnly, updatePickupStatus);
 
-export default router
-
+export default router;

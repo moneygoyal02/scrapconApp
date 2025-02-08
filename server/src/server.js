@@ -10,6 +10,7 @@ import userRoutes from "./api/routes/userRoutes.js"
 import vendorRoutes from "./api/routes/vendorRoutes.js"
 import pickupRoutes from "./api/routes/pickupRoutes.js"
 
+import adminRoutes from "./api/routes/adminRoutes.js"
 
 const app = express()
 
@@ -32,6 +33,8 @@ app.use(express.json())
 app.use("/api/users", userRoutes)
 app.use("/api/vendors", vendorRoutes)
 app.use("/api/pickups", pickupRoutes)
+
+app.use("/api/admin", adminRoutes)
 
 
 // Error handling

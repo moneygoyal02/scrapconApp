@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'user_screens/dashboard_screen.dart'; // Import the DashboardScreen
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class NotificationsScreen extends StatelessWidget {
   @override
@@ -71,12 +72,7 @@ class NotificationsScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => DashboardScreen()),
-                  );
-                },
+                onPressed: _requestNotificationPermission,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF17255A),
                   padding: EdgeInsets.symmetric(vertical: 15),
@@ -120,5 +116,28 @@ class NotificationsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _requestNotificationPermission() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    // Request permission for iOS
+    await messaging.requestPermission(
+      alert: true,
+      badge: true,
+      provisional: false,
+      sound: true,
+    );
+
+    // if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    //   print('User granted permission');
+    //   // Handle the case when permission is granted
+    // } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+    //   print('User granted provisional permission');
+    //   // Handle the case when provisional permission is granted
+    // } else {
+    //   print('User declined or has not accepted permission');
+    //   // Handle the case when permission is denied
+    // }
   }
 }

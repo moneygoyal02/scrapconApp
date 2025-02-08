@@ -3,11 +3,9 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-<<<<<<<<< Temporary merge branch 1
   file_selector_windows
-=========
+  firebase_core
   url_launcher_windows
->>>>>>>>> Temporary merge branch 2
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

@@ -74,7 +74,7 @@ class SellerCard extends StatelessWidget {
               ],
             ),
             SizedBox(height: 8),
-            Text('Sector 80, AB Road, New Delhi, India', style: TextStyle(fontWeight: FontWeight.w500)),
+            Text('Sector 80, AB Road,Delhi, India', style: TextStyle(fontWeight: FontWeight.w500)),
             SizedBox(height: 8),
             infoRow('Areas served:', 'Chandigarh & nearby areas'),
             infoRow('Job Success score:', 'At least 90%'),

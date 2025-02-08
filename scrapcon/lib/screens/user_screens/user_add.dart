@@ -6,8 +6,47 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:scrapcon/screens/passwords.dart';
+import 'package:scrapcon/screens/user_screens/user_activity.dart';
+
+import 'dart:ui';
+import 'package:flutter/material.dart';
+
+class LoadingOverlay extends StatelessWidget {
+  final bool isLoading;
+  final Widget child;
+
+  const LoadingOverlay({
+    super.key,
+    required this.isLoading,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        child, // Main content
+        if (isLoading) ...[
+          Positioned.fill(
+              child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+            child: Opacity(
+              opacity: 0.3,
+              child: Container(
+                alignment: Alignment.center,
+                child: const CircularProgressIndicator(),
+              ),
+            ),
+          )),
+        ],
+      ],
+    );
+  }
+}
 
 class UserAddScreen extends StatefulWidget {
+  const UserAddScreen({super.key});
+
   @override
   State<UserAddScreen> createState() => _UserAddScreenState();
 }
@@ -17,15 +56,20 @@ class _UserAddScreenState extends State<UserAddScreen> {
   List<dynamic>? _detectedObjects;
   bool _isLoading = false;
 
-  Future<void> _pickImage(ImageSource source) async {
-    final pickedFile = await ImagePicker().pickImage(source: source);
+  String scrapCategory = '';
+  final _quantityController = TextEditingController(text: 'Enter Quantity');
+  final _scheduledDateController =
+      TextEditingController(text: 'Enter Due Date');
+
+  Future<void> _pickImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
 
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
-        _detectedObjects = null; // Clear previous results
-      } else {
-        print('No image selected.');
+        _detectedObjects = null;
+        scrapCategory = '';
       }
     });
 
@@ -48,7 +92,9 @@ class _UserAddScreenState extends State<UserAddScreen> {
       final response = await http.post(
         Uri.parse(
             '${Passwords.backendUrl}/detect'), // Replace with your backend URL
-        body: jsonEncode({'image': base64Image}),
+        body: jsonEncode({
+          'image': base64Image,
+        }),
         headers: {'Content-Type': 'application/json'},
       );
 
@@ -56,21 +102,50 @@ class _UserAddScreenState extends State<UserAddScreen> {
         final jsonData = jsonDecode(response.body);
         setState(() {
           _detectedObjects = jsonData['objects'];
+
           _isLoading = false;
+          if (_detectedObjects == null || _detectedObjects!.isEmpty) {
+            _showErrorDialog('ERROR: ${response.body} ${response.statusCode}');
+          } else {
+            scrapCategory = _detectedObjects![0]['name'];
+          }
         });
       } else {
-        print('Error: ${response.statusCode}');
         setState(() {
           _isLoading = false;
         });
-        _showErrorDialog('Error: ${response.statusCode}');
+        _showErrorDialog('ERROR: ${response.body} ${response.statusCode}');
       }
     } catch (e) {
-      print('Error: $e');
       setState(() {
         _isLoading = false;
       });
-      _showErrorDialog('An error occurred: $e');
+      _showErrorDialog('ERROR: $e');
+    }
+  }
+
+  void _submitPickupRequest() async {
+    final response = await http.post(
+      Uri.parse(
+          '${Passwords.backendUrl}/api/pickups/request'), // Replace with your backend URL
+      body: jsonEncode({
+        'scrapImage': _image!,
+        'category': scrapCategory,
+        'quantity': _quantityController.text,
+        'scheduledDate': _scheduledDateController.text,
+      }),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (BuildContext context) => UserActivityScreen()));
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      _showErrorDialog('ERROR: ${response.body} ${response.statusCode}');
     }
   }
 
@@ -100,36 +175,47 @@ class _UserAddScreenState extends State<UserAddScreen> {
       body: Center(
         child: SingleChildScrollView(
           // Added for scrollability
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              if (_image != null) ...[
-                Image.file(_image!),
-                SizedBox(height: 20),
-              ],
-              ElevatedButton(
-                onPressed: () => _pickImage(ImageSource.gallery),
-                child: Text('Pick Image from Gallery'),
-              ),
-              ElevatedButton(
-                onPressed: () => _pickImage(ImageSource.camera),
-                child: Text('Pick Image from Camera'),
-              ),
-              if (_isLoading) ...[
-                SizedBox(height: 20),
-                CircularProgressIndicator(),
-              ],
-              if (_detectedObjects != null) ...[
-                SizedBox(height: 20),
-                Text('Detected Objects:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(height: 10),
-                for (var object in _detectedObjects!)
-                  Text(
-                      '${object['name']} (Confidence: ${object['confidence']})'),
-              ],
-            ],
-          ),
+          child: LoadingOverlay(
+              isLoading: _isLoading,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  if (_image == null)
+                    ElevatedButton(
+                        style: ButtonStyle(
+                          iconSize: WidgetStateProperty.all(30.0),
+                        ),
+                        onPressed: () => _pickImage(),
+                        child: Icon(Icons.add_a_photo))
+                  else
+                    Image.file(
+                      _image!,
+                      height: 300.0,
+                      width: 300.0,
+                    ),
+                  Text('Scrap Category: $scrapCategory'),
+                  TextField(
+                    controller: _quantityController,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                        labelText: 'Enter Quantity',
+                        border: OutlineInputBorder()),
+                  ),
+                  TextField(
+                    controller: _quantityController,
+                    keyboardType: TextInputType.datetime,
+                    decoration: InputDecoration(
+                        labelText: 'Enter Due Date',
+                        border: OutlineInputBorder()),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      _submitPickupRequest();
+                    },
+                    child: Text('Submit'),
+                  ),
+                ],
+              )),
         ),
       ),
     );

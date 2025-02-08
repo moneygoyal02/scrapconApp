@@ -7,12 +7,12 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF6B93CA),
+      backgroundColor: Color(0xFF6ECA6B),
       body: Stack(
         children: [
           Center(
             child: SvgPicture.asset(
-              'assets/splash_svg.svg',
+              'splash.svg',
               fit: BoxFit.cover, 
               width: MediaQuery.of(context).size.width, 
               height: MediaQuery.of(context).size.height * 0.9,
@@ -32,7 +32,7 @@ class WelcomeScreen extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF17255A),
+                    backgroundColor: Color(0xFF186F1F),
                     foregroundColor: Colors.white,
                     padding: EdgeInsets.symmetric(vertical: 15, horizontal: 100),
                     textStyle: TextStyle(fontSize: 18),
@@ -49,7 +49,7 @@ class WelcomeScreen extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
-                    foregroundColor: Color(0xFF17255A),
+                    foregroundColor: Color(0xFF186F1F),
                     padding: EdgeInsets.symmetric(vertical: 15, horizontal: 100),
                     textStyle: TextStyle(fontSize: 18),
                   ),

@@ -9,7 +9,6 @@ import 'package:scrapcon/screens/passwords.dart';
 import 'package:scrapcon/screens/user_screens/user_activity.dart';
 
 import 'dart:ui';
-import 'package:flutter/material.dart';
 
 class LoadingOverlay extends StatelessWidget {
   final bool isLoading;
@@ -57,9 +56,8 @@ class _UserAddScreenState extends State<UserAddScreen> {
   bool _isLoading = false;
 
   String scrapCategory = '';
-  final _quantityController = TextEditingController(text: 'Enter Quantity');
-  final _scheduledDateController =
-      TextEditingController(text: 'Enter Due Date');
+  final _quantityController = TextEditingController();
+  final _scheduledDateController = TextEditingController();
 
   Future<void> _pickImage() async {
     final pickedFile =
@@ -191,23 +189,33 @@ class _UserAddScreenState extends State<UserAddScreen> {
                     Image.file(
                       _image!,
                       height: 300.0,
-                      width: 300.0,
+                      width: 200.0,
                     ),
-                  Text('Scrap Category: $scrapCategory'),
-                  TextField(
-                    controller: _quantityController,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                        labelText: 'Enter Quantity',
-                        border: OutlineInputBorder()),
+                  SizedBox(height: 10.0),
+                  Text('Scrap Category: $scrapCategory',
+                      style: TextStyle(
+                          fontSize: 10.0, fontWeight: FontWeight.bold)),
+                  SizedBox(height: 10.0),
+                  Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: TextField(
+                        controller: _quantityController,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                            labelText: 'Enter Quantity',
+                            border: OutlineInputBorder()),
+                      )),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: TextField(
+                      controller: _scheduledDateController,
+                      keyboardType: TextInputType.datetime,
+                      decoration: InputDecoration(
+                          labelText: 'Enter Due Date',
+                          border: OutlineInputBorder()),
+                    ),
                   ),
-                  TextField(
-                    controller: _quantityController,
-                    keyboardType: TextInputType.datetime,
-                    decoration: InputDecoration(
-                        labelText: 'Enter Due Date',
-                        border: OutlineInputBorder()),
-                  ),
+                  SizedBox(height: 20.0),
                   ElevatedButton(
                     onPressed: () {
                       _submitPickupRequest();

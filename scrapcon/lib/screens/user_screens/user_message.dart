@@ -6,14 +6,16 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:uuid/uuid.dart';
 
 class ChatPage extends StatefulWidget {
+  const ChatPage({super.key});
+
   @override
-  _ChatPageState createState() => _ChatPageState();
+  State<ChatPage> createState() => _ChatPageState();
 }
 
 class _ChatPageState extends State<ChatPage> {
   final List<types.Message> _messages = [];
   final types.User _user = types.User(id: "1");
-  final types.User _otherUser = types.User(id: "2");
+  // final types.User _otherUser = types.User(id: "2");
 
   void _handleSendPressed(types.PartialText message) {
     final newMessage = types.TextMessage(
@@ -66,8 +68,7 @@ class _ChatPageState extends State<ChatPage> {
             ),
             borderRadius: BorderRadius.circular(20.0),
           ),
-          child: 
-          Padding(
+          child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [

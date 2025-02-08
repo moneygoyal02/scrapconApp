@@ -11,12 +11,12 @@ class VendorExploreScreen extends StatelessWidget {
           return AdCard(
             title: "Wood",
             quantity: 15,
-            location: "Sector 80, AB Road, New Delhi, India",
+            location: "Sector 80, AB Road, Delhi, India",
             dueDate: "5d ago",
             leadingBid: "\$100",
             imageUrl: "https://media.istockphoto.com/id/151540540/photo/crane-picking-up-car.jpg?s=2048x2048&w=is&k=20&c=nr6Cwhy-7tBaJCNRQ8m1qO0CshPm5WpxO3pEiRZlq9w=",
             onTap: () {
-              _showBidPopup(context, "Wood", "Sector 80, AB Road, New Delhi, India", 15, "5d ago", "\$100");
+              _showBidPopup(context, "Wood", "Sector 80, AB Road, Delhi, India", 15, "5d ago", "\$100");
             },
           );
         },

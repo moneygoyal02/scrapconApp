@@ -33,6 +33,8 @@ class _VendorDashboardScreenState extends State<VendorDashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xFF186F1F),
+        foregroundColor: Colors.white,
         title: Text(['Dashboard', 'Activity', 'Explore', 'Account'][_currentIndex]),
       ),
       body: _screens[_currentIndex], // Display the current screen

@@ -139,7 +139,7 @@ class AdCard extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 16.0),
                         backgroundColor: Color(0xFF186F1F),
                       ),
-                      child: Text('See Bid', style: TextStyle(color: Colors.white)),
+                      child: Text('Make Bid', style: TextStyle(color: Colors.white)),
                     ),
                   ],
                 ),

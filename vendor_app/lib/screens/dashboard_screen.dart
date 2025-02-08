@@ -37,11 +37,11 @@ class _VendorDashboardScreenState extends State<VendorDashboardScreen> {
         foregroundColor: Colors.white,
         title: Text(['Dashboard', 'Activity', 'Explore', 'Account'][_currentIndex]),
       ),
-      body: _screens[_currentIndex], // Display the current screen
+      body: _screens[_currentIndex], 
       bottomNavigationBar: VendorBottomNavBar(
         currentIndex: _currentIndex,
         onTap: (index) {
-          _onTap(index); // Call the onTap function
+          _onTap(index); 
         },
       ),
     );

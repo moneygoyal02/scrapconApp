@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:vendor_app/screens/dashboard_screen.dart';
 import 'dart:convert';
 import 'passwords.dart'; // Import the passwords.dart file
+import '../token_provider.dart';
+import 'package:provider/provider.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -12,8 +14,9 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  final TextEditingController _businessNameController = TextEditingController();
+  final TextEditingController _ownerNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -23,8 +26,9 @@ class _SignupScreenState extends State<SignupScreen> {
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
+        'businessName': _businessNameController.text,
+        'ownerName': _ownerNameController.text,
         'email': _emailController.text,
-        'name': _nameController.text,
         'phone': _phoneController.text,
         'password': _passwordController.text,
       }),
@@ -33,6 +37,7 @@ class _SignupScreenState extends State<SignupScreen> {
     if (response.statusCode == 201) {
       final data = json.decode(response.body);
       final token = data['token']; 
+      Provider.of<TokenProvider>(context, listen: false).setToken(token); // Store token in provider
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -63,13 +68,18 @@ class _SignupScreenState extends State<SignupScreen> {
               child: ListView(
                 children: [
                   TextField(
-                    controller: _emailController,
-                    decoration: InputDecoration(labelText: 'Email Address', border: OutlineInputBorder()),
+                    controller: _businessNameController,
+                    decoration: InputDecoration(labelText: 'Business Name', border: OutlineInputBorder()),
                   ),
                   SizedBox(height: 10),
                   TextField(
-                    controller: _nameController,
-                    decoration: InputDecoration(labelText: 'Name', border: OutlineInputBorder()),
+                    controller: _ownerNameController,
+                    decoration: InputDecoration(labelText: 'Owner Name', border: OutlineInputBorder()),
+                  ),
+                  SizedBox(height: 10),
+                  TextField(
+                    controller: _emailController,
+                    decoration: InputDecoration(labelText: 'Email Address', border: OutlineInputBorder()),
                   ),
                   SizedBox(height: 10),
                   TextField(

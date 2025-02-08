@@ -4,7 +4,8 @@ class UserBottomNavBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
 
-  UserBottomNavBar({required this.currentIndex, required this.onTap});
+  const UserBottomNavBar(
+      {super.key, required this.currentIndex, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -40,4 +41,4 @@ class UserBottomNavBar extends StatelessWidget {
       ],
     );
   }
-} 
+}

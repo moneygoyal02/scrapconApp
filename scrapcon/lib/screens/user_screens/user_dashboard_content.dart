@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';// Import the SupportAgentScreen class
-import 'user_message.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:provider/provider.dart';
 import '../token_provider.dart';
 import '../passwords.dart';
-
+import 'user_message.dart';
 class UserDashboardContent extends StatefulWidget {
   @override
   _UserDashboardContentState createState() => _UserDashboardContentState();
@@ -48,7 +47,6 @@ class _UserDashboardContentState extends State<UserDashboardContent> {
       setState(() => _isLoading = false);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {

@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'package:provider/provider.dart';
 import '../token_provider.dart'; 
 import '../passwords.dart';
+import 'user_details_screen.dart'; // Add this import statement
 
 class UserProfileScreen extends StatefulWidget {
   @override
@@ -16,6 +17,8 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   String? _name;
+  String? _email;
+  String? _phone;
 
   @override
   void initState() {
@@ -40,6 +43,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       if (mounted) { // Check if the widget is still mounted
         setState(() {
           _name = data['name'];
+          _email = data['email'];
+          _phone = data['phone'];
         });
       }
     } else {
@@ -97,7 +102,20 @@ Widget _buildProfileSection() {
               SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () {
-                  // Add your onPressed logic here
+                  if (_name != null && _email != null && _phone != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UserDetailsScreen(
+                          name: _name!,
+                          email: _email!,
+                          phone: _phone!,
+                        ),
+                      ),
+                    );
+                  } else {
+                    print('One or more user details are null');
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF17255A),

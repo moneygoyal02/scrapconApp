@@ -7,6 +7,7 @@ import { uploadImage } from '../../services/cloudinaryService.js';
 export const requestPickup = async (req, res, next) => {
   try {
     const { vendorId, scheduledDate, items, notes } = req.body;
+    console.log(req.file);
 
     if (!req.file) {
       res.status(400);

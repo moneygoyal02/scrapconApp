@@ -12,6 +12,7 @@ import pickupRoutes from "./api/routes/pickupRoutes.js";
 import reviewRoutes from "./api/routes/reviewRoutes.js";
 import scrapCategoryRoutes from "./api/routes/scrapCategoryRoutes.js";
 import adminRoutes from "./api/routes/adminRoutes.js";
+import bidRoutes from "./api/routes//bidRoutes.js";
 import { getAllUsers } from "./api/controllers/leaderboardController.js";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -28,7 +29,7 @@ app.use(express.json({ limit: "10mb" }));
 app.use(cors());
 app.use(helmet());
 app.use(morgan("dev"));
-
+app.use(express.urlencoded({ extended: true }));
 // Connect to MongoDB
 mongoose
   .connect(config.databaseURL, {
@@ -80,6 +81,7 @@ app.use("/api/scrap-categories", scrapCategoryRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.get("/api/leaderboard", getAllUsers);
+app.use("/api/bids", bidRoutes);
 app.get("/", (req, res) => {
   res.send("Server is running");
 });

@@ -11,7 +11,7 @@ class UserAdsScreen extends StatelessWidget {
           return AdCard(
             title: "Metal",
             quantity: 15,
-            location: "Sector 80, GB Road, New Delhi, India",
+            location: "Sector 80, Benjamin Road, New Delhi, India",
             dueDate: "17/08/2025",
             imageUrl: "https://media.istockphoto.com/id/151540540/photo/crane-picking-up-car.jpg?s=2048x2048&w=is&k=20&c=nr6Cwhy-7tBaJCNRQ8m1qO0CshPm5WpxO3pEiRZlq9w=", // Replace with your image URL
             onTap: () {

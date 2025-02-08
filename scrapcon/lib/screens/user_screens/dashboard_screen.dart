@@ -7,8 +7,10 @@ import 'user_activity.dart';
 import 'user_bottom_nav_bar.dart';
 
 class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({super.key});
+
   @override
-  _DashboardScreenState createState() => _DashboardScreenState();
+  State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
@@ -32,7 +34,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(['Dashboard', 'My Ads', 'Add', 'Profile', 'Activity'][_currentIndex]),
+        title: Text([
+          'Dashboard',
+          'My Ads',
+          'Add',
+          'Profile',
+          'Activity'
+        ][_currentIndex]),
         backgroundColor: Color(0xFF17255A),
         foregroundColor: Colors.white,
         elevation: 0,

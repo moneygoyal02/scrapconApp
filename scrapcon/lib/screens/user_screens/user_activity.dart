@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class UserActivityScreen extends StatelessWidget {
+  const UserActivityScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +19,6 @@ class UserActivityScreen extends StatelessWidget {
           ],
         ),
       ),
-      
     );
   }
 
@@ -63,7 +64,9 @@ class UserActivityScreen extends StatelessWidget {
           child: ListTile(
             leading: CircleAvatar(
               backgroundColor: Colors.grey[300],
-              child: index % 2 == 0 ? Icon(MdiIcons.recycle, color: Colors.green) : Icon(MdiIcons.packageVariant),
+              child: index % 2 == 0
+                  ? Icon(MdiIcons.recycle, color: Colors.green)
+                  : Icon(MdiIcons.packageVariant),
             ),
             title: Text(index % 2 == 0 ? 'Sold wood scrap' : 'Buy wood scrap'),
             subtitle: Text(index % 2 == 0 ? 'to: abcd co.' : 'from: abcd co.'),
@@ -71,7 +74,8 @@ class UserActivityScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('\$50', style: TextStyle(fontWeight: FontWeight.bold)),
-                Text('7:26 pm', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                Text('7:26 pm',
+                    style: TextStyle(fontSize: 12, color: Colors.grey)),
               ],
             ),
           ),

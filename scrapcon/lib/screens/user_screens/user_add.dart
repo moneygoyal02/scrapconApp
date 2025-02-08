@@ -97,9 +97,6 @@ class _UserAddScreenState extends State<UserAddScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Object Detection'),
-      ),
       body: Center(
         child: SingleChildScrollView(
           // Added for scrollability

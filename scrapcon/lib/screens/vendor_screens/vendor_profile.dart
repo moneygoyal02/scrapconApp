@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'vendor_adds.dart';
-import 'vendor_activity.dart';
 import 'vendor_settings.dart';
 import 'vendor_support.dart'; // Add this import statement
 
@@ -9,12 +8,6 @@ class VendorProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('My Account', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-      //   backgroundColor: Colors.white,
-      //   foregroundColor: Color(0xFF17255A),
-      //   elevation: 0,
-      // ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(

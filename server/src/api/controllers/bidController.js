@@ -1,4 +1,5 @@
 import { Bid } from "../../models/Bid.js";
+import { BidAmount } from "../../models/BidsAmount.js";
 import { User } from "../../models/User.js";
 import { UserAddress } from "../../models/UserAddress.js";
 import { uploadImage } from "../../services/cloudinaryService.js";
@@ -99,6 +100,115 @@ export const getAllBidswp = async (req, res, next) => {
       success: true,
       count: bids.length,
       bids: bids
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Create a new bid amount entry
+export const createBidAmount = async (req, res, next) => {
+  try {
+    const { vendor, bid, highestBid } = req.body;
+    // Assume the authenticated user is the customer placing the bid
+    const customer = req.user._id;
+
+    const newBidAmount = new BidAmount({
+      customer,
+      vendor,
+      bid,
+      highestBid, // You can omit this if you want the default value (0) to be used
+    });
+
+    const savedBidAmount = await newBidAmount.save();
+
+    res.status(201).json({
+      success: true,
+      bidAmount: savedBidAmount,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get all bid amount entries
+export const getAllBidAmounts = async (req, res, next) => {
+  try {
+    const bidAmounts = await BidAmount.find()
+      .populate({
+        path: 'customer',
+        select: 'name email phone'
+      })
+      .populate({
+        path: 'vendor',
+        select: 'businessName phone'
+      })
+      .populate({
+        path: 'bid',
+        select: 'scheduledDate image'
+      })
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: bidAmounts.length,
+      bidAmounts,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get a single bid amount entry by ID
+export const getBidAmount = async (req, res, next) => {
+  try {
+    const bidAmount = await BidAmount.findById(req.params.id)
+      .populate({
+        path: 'customer',
+        select: 'name email phone'
+      })
+      .populate({
+        path: 'vendor',
+        select: 'businessName phone'
+      })
+      .populate({
+        path: 'bid',
+        select: 'scheduledDate image'
+      });
+
+    if (!bidAmount) {
+      res.status(404);
+      throw new Error("Bid amount not found");
+    }
+
+    res.status(200).json({
+      success: true,
+      bidAmount,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Update a bid amount entry (for example, to update the highest bid)
+export const updateBidAmount = async (req, res, next) => {
+  try {
+    const bidAmount = await BidAmount.findById(req.params.id);
+
+    if (!bidAmount) {
+      res.status(404);
+      throw new Error("Bid amount not found");
+    }
+
+    // Update only the highestBid or any other field if necessary
+    bidAmount.highestBid = req.body.highestBid ?? bidAmount.highestBid;
+    // You can add more fields to update if needed
+
+    const updatedBidAmount = await bidAmount.save();
+
+    res.status(200).json({
+      success: true,
+      bidAmount: updatedBidAmount,
     });
   } catch (error) {
     next(error);

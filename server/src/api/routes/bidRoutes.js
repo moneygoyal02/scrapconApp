@@ -1,7 +1,10 @@
 import express from "express";
 import multer from "multer";
 import { protect, vendorOnly } from "../../middleware/authMiddleware.js";
-import { placeBid, getAllBids,getAllBidswp } from "../controllers/bidController.js";
+import { placeBid, getAllBids,getAllBidswp,createBidAmount,
+    getAllBidAmounts,
+    getBidAmount,
+    updateBidAmount, } from "../controllers/bidController.js";
 
 const router = express.Router();
 
@@ -36,4 +39,16 @@ router.post("/placeBid", protect, uploadMiddleware, placeBid);
 
 router.get("/getAll", protect, getAllBids);
 router.get("/getAllwp", getAllBidswp);
+// Create a new bid amount entry
+router.post("/", protect, createBidAmount);
+
+// Get all bid amounts
+router.get("/", protect, getAllBidAmounts);
+
+// Get a specific bid amount by ID
+router.get("/:id", protect, getBidAmount);
+
+// Update a bid amount entry (e.g., updating the highest bid)
+// If only vendors should update, you can add vendorOnly middleware:
+router.put("/:id", protect, vendorOnly, updateBidAmount);
 export default router;

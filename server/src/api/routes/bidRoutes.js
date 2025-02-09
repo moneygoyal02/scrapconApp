@@ -23,10 +23,8 @@ const upload = multer({
 const uploadMiddleware = (req, res, next) => {
   upload(req, res, function (err) {
     if (err instanceof multer.MulterError) {
-      // A Multer error occurred when uploading
       res.status(400).json({ message: `Upload error: ${err.message}` });
     } else if (err) {
-      // An unknown error occurred
       res.status(400).json({ message: `Unknown error: ${err.message}` });
     } else {
       // Everything went fine

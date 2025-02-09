@@ -1,27 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'passwords.dart';
 
-class VendorExploreScreen extends StatelessWidget {
+class VendorExploreScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView.builder(
-        padding: EdgeInsets.all(16.0),
-        itemCount: 3, // Example item count
-        itemBuilder: (context, index) {
-          return AdCard(
-            title: "Wood",
-            quantity: 15,
-            location: "Sector 80, AB Road, Delhi, India",
-            dueDate: "5d ago",
-            leadingBid: "\$100",
-            imageUrl: "https://media.istockphoto.com/id/151540540/photo/crane-picking-up-car.jpg?s=2048x2048&w=is&k=20&c=nr6Cwhy-7tBaJCNRQ8m1qO0CshPm5WpxO3pEiRZlq9w=",
-            onTap: () {
-              _showBidPopup(context, "Wood", "Sector 80, AB Road, Delhi, India", 15, "5d ago", "\$100");
-            },
-          );
-        },
-      ),
-    );
+  _VendorExploreScreenState createState() => _VendorExploreScreenState();
+}
+
+class _VendorExploreScreenState extends State<VendorExploreScreen> {
+  List<dynamic> _bids = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchBids();
+  }
+
+  Future<void> _fetchBids() async {
+    try {
+      final url = '${Passwords.backendUrl}/api/bids/getAllWp'; // Update with your backend URL
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success'] == true && data['bids'] != null) {
+          setState(() {
+            _bids = data['bids'];
+            _isLoading = false;
+          });
+        } else {
+          print('Failed to fetch bids: ${response.body}');
+          setState(() => _isLoading = false);
+        }
+      } else {
+        print('Failed to fetch bids: ${response.body}');
+        setState(() => _isLoading = false);
+      }
+    } catch (error) {
+      print('Error fetching bids: $error');
+      setState(() => _isLoading = false);
+    }
   }
 
   void _showBidPopup(BuildContext context, String title, String location, int quantity, String dueDate, String leadingBid) {
@@ -78,6 +98,42 @@ class VendorExploreScreen extends StatelessWidget {
       },
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              padding: EdgeInsets.all(16.0),
+              itemCount: _bids.length,
+              itemBuilder: (context, index) {
+                final bid = _bids[index];
+                final items = json.decode(bid['items'] ?? '[]');
+                final firstItem = items.isNotEmpty ? items[0] : {};
+
+                return AdCard(
+                  title: firstItem['category'] ?? 'Unknown',
+                  quantity: firstItem['quantity'] ?? 0,
+                  location: '${bid['address']['city']}, ${bid['address']['state']}',
+                  dueDate: 'Due: ${bid['scheduledDate']}', // Format as needed
+                  leadingBid: '\$${bid['amount']}', // Adjust based on your data
+                  imageUrl: bid['image'] ?? '',
+                  onTap: () {
+                    _showBidPopup(
+                      context,
+                      firstItem['category'] ?? 'Unknown',
+                      '${bid['address']['city']}, ${bid['address']['state']}',
+                      firstItem['quantity'] ?? 0,
+                      'Due: ${bid['scheduledDate']}', // Format as needed
+                      '\$${bid['amount']}', // Adjust based on your data
+                    );
+                  },
+                );
+              },
+            ),
+    );
+  }
 }
 
 class AdCard extends StatelessWidget {
@@ -123,7 +179,7 @@ class AdCard extends StatelessWidget {
                     SizedBox(height: 4),
                     Text(location),
                     SizedBox(height: 4),
-                    Text('Due Date: $dueDate'),
+                    Text(dueDate),
                   ],
                 ),
                 Column(

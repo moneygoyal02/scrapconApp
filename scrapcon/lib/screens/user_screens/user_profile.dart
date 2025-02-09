@@ -19,6 +19,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   String? _name;
   String? _email;
   String? _phone;
+  String _language = 'English'; // Default language
 
   @override
   void initState() {
@@ -50,6 +51,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     } else {
       print('Failed to fetch user profile: ${response.body}');
     }
+  }
+
+  void _toggleLanguage() {
+    setState(() {
+      _language = _language == 'English' ? 'Hindi' : 'English';
+    });
   }
 
   @override
@@ -160,6 +167,18 @@ Widget _buildProfileSection() {
           subtitle: 'Help center, Terms and conditions, Privacy policy',
           destination: HelpAndSupportScreen(),
         ),
+        _buildSettingsTile(
+          context: context,
+          icon: MdiIcons.translateVariant,
+          title: 'Languages',
+          subtitle: 'Toggle between English and Hindi',
+          destination: Container(), // No navigation needed
+          onTap: _toggleLanguage,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Text('Current Language: $_language'),
+        ),
       ],
     );
   }
@@ -170,6 +189,7 @@ Widget _buildProfileSection() {
   required String title,
   required String subtitle,
   required Widget destination,
+  VoidCallback? onTap,
 }) {
   return ListTile(
     leading: Icon(icon, size: 30, color: const Color(0xFF17255A)),
@@ -182,7 +202,7 @@ Widget _buildProfileSection() {
       style: const TextStyle(fontSize: 14, color: Colors.grey),
     ),
     trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
-    onTap: () {
+    onTap: onTap ?? () {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => destination),

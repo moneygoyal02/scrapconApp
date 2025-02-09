@@ -11,12 +11,12 @@ class ChatbotSupport extends StatefulWidget {
 class _ChatbotSupportState extends State<ChatbotSupport> {
   final ChatUser user = ChatUser(
     firstName: "User",
-    id: "1",
+    id: "2",
   );
 
   final ChatUser bot = ChatUser(
     firstName: "Bot",
-    id: "2",
+    id: "1",
   );
 
   List<ChatMessage> messages = [];

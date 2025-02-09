@@ -5,10 +5,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:scrapcon/screens/passwords.dart';
 import 'package:scrapcon/screens/user_screens/user_activity.dart';
 
 import 'dart:ui';
+
+import '../token_provider.dart';
 
 class LoadingOverlay extends StatelessWidget {
   final bool isLoading;
@@ -55,7 +58,8 @@ class _UserAddScreenState extends State<UserAddScreen> {
   List<dynamic>? _detectedObjects;
   bool _isLoading = false;
 
-  String scrapCategory = '';
+  String _scrapCategory = '';
+  double? _scrapQuality;
   final _quantityController = TextEditingController();
   final _scheduledDateController = TextEditingController();
 
@@ -67,7 +71,7 @@ class _UserAddScreenState extends State<UserAddScreen> {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
         _detectedObjects = null;
-        scrapCategory = '';
+        _scrapCategory = '';
       }
     });
 
@@ -96,7 +100,7 @@ class _UserAddScreenState extends State<UserAddScreen> {
         headers: {'Content-Type': 'application/json'},
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         final jsonData = jsonDecode(response.body);
         setState(() {
           _detectedObjects = jsonData['objects'];
@@ -105,7 +109,7 @@ class _UserAddScreenState extends State<UserAddScreen> {
           if (_detectedObjects == null || _detectedObjects!.isEmpty) {
             _showErrorDialog('ERROR: ${response.body} ${response.statusCode}');
           } else {
-            scrapCategory = _detectedObjects![0]['name'];
+            _scrapCategory = _detectedObjects![0]['name'];
           }
         });
       } else {
@@ -123,27 +127,36 @@ class _UserAddScreenState extends State<UserAddScreen> {
   }
 
   void _submitPickupRequest() async {
-    final response = await http.post(
-      Uri.parse(
-          '${Passwords.backendUrl}/api/pickups/request'), // Replace with your backend URL
-      body: jsonEncode({
-        'scrapImage': _image!,
-        'category': scrapCategory,
-        'quantity': _quantityController.text,
-        'scheduledDate': _scheduledDateController.text,
-      }),
-      headers: {'Content-Type': 'application/json'},
-    );
+    setState(() {
+      _isLoading = true;
+    });
 
+    final token = Provider.of<TokenProvider>(context, listen: false).token;
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('${Passwords.backendUrl}/api/bids/placeBid'));
+    request.headers['Authorization'] = 'Bearer $token';
+    request.fields['scheduledDate'] = _scheduledDateController.text;
+    request.files
+        .add(await http.MultipartFile.fromPath('bidImage', _image!.path));
+    request.fields['items'] = jsonEncode([
+      {
+        'category': _scrapCategory,
+        'quantity': _quantityController.text,
+        'scrapQuality': _scrapQuality.toString(),
+      }
+    ]);
+
+    final response = await request.send();
+
+    setState(() {
+      _isLoading = false;
+    });
     if (response.statusCode == 200) {
       // ignore: use_build_context_synchronously
       Navigator.of(context).push(MaterialPageRoute(
           builder: (BuildContext context) => UserActivityScreen()));
     } else {
-      setState(() {
-        _isLoading = false;
-      });
-      _showErrorDialog('ERROR: ${response.body} ${response.statusCode}');
+      _showErrorDialog('ERROR: ${response.toString()} ${response.statusCode}');
     }
   }
 
@@ -192,9 +205,16 @@ class _UserAddScreenState extends State<UserAddScreen> {
                       width: 200.0,
                     ),
                   SizedBox(height: 10.0),
-                  Text('Scrap Category: $scrapCategory',
-                      style: TextStyle(
-                          fontSize: 10.0, fontWeight: FontWeight.bold)),
+                  TextButton(
+                      onPressed: () {},
+                      style: ButtonStyle(
+                        backgroundColor:
+                            WidgetStateProperty.all(Color(0xFF17255A)),
+                      ),
+                      child: Text(
+                        'Scrap Category: $_scrapCategory',
+                        style: TextStyle(color: Colors.white),
+                      )),
                   SizedBox(height: 10.0),
                   Padding(
                       padding: EdgeInsets.all(10.0),

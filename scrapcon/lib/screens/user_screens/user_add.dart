@@ -139,13 +139,10 @@ class _UserAddScreenState extends State<UserAddScreen> {
     request.fields['scheduledDate'] = _scheduledDateController.text;
     request.files
         .add(await http.MultipartFile.fromPath('bidImage', _image!.path));
-    request.fields['items'] = jsonEncode([
-      {
-        'category': _scrapCategory,
-        'quantity': _quantityController.text,
-        'scrapQuality': _scrapQuality.toString(),
-      }
-    ]);
+
+    request.fields['cateogory'] = _scrapCategory;
+    request.fields['quantity'] = _quantityController.text;
+    request.fields['scrapQuality'] = _scrapQuality.toString();
 
     final response = await request.send();
 

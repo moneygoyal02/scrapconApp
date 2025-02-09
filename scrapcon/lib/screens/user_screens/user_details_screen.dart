@@ -6,7 +6,7 @@ class UserDetailsScreen extends StatelessWidget {
   final String email;
   final String phone;
 
-  UserDetailsScreen({
+  const UserDetailsScreen({super.key, 
     required this.businessName,
     required this.ownerName,
     required this.email,

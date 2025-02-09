@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -32,7 +34,7 @@ class _UserDashboardContentState extends State<UserDashboardContent> {
 
   Future<void> _fetchBids() async {
     if (!mounted) return;
-    
+
     try {
       final token = Provider.of<TokenProvider>(context, listen: false).token;
       final url = '${Passwords.backendUrl}/api/bids/getAll';
@@ -81,6 +83,7 @@ class _UserDashboardContentState extends State<UserDashboardContent> {
                     // Bids list
                                        _isLoading
                         ? Center(child: CircularProgressIndicator())
+<<<<<<< HEAD
                         : _bids.isEmpty
                             ? _buildNoBidsPlaceholder()
                             : ListView.builder(
@@ -111,6 +114,39 @@ class _UserDashboardContentState extends State<UserDashboardContent> {
                                             ),
                                           ),
                                         ],
+=======
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: min(_bids.length, 3),
+                            itemBuilder: (context, index) {
+                              final bid = _bids[index];
+                              final category = bid['category'];
+                              final quantity = bid['quantity'];
+
+                              return Card(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
+                                child: ListTile(
+                                  leading: Icon(Icons.timer_outlined,
+                                      color: Color(0xFF17255A)),
+                                  title: Text('$category'),
+                                  subtitle: Text(
+                                      'To: ${bid['address']['city']}, ${bid['address']['state']}'),
+                                  trailing: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text('$quantity'),
+                                      Text(
+                                        bid['isLive'] ? 'Active' : 'Inactive',
+                                        style: TextStyle(
+                                          color: bid['isLive']
+                                              ? Colors.green
+                                              : Colors.red,
+                                          fontSize: 12,
+                                        ),
+>>>>>>> 90ab5938103a5b8a5fd1e47eec7a316964ab568c
                                       ),
                                     ),
                                   );
@@ -123,8 +159,9 @@ class _UserDashboardContentState extends State<UserDashboardContent> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Suggestions', 
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                          Text('Suggestions',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold)),
                         ],
                       ),
                     ),
@@ -138,12 +175,24 @@ class _UserDashboardContentState extends State<UserDashboardContent> {
                       crossAxisSpacing: 10,
                       childAspectRatio: 1.5,
                       children: [
+<<<<<<< HEAD
                         _buildSuggestionCard(context, 'Steel', Icons.build, Colors.blue),
                         _buildSuggestionCard(context, 'Wood', Icons.build, Colors.brown),
                         _buildSuggestionCard(context, 'Plastic', Icons.water, Colors.green),
                         _buildSuggestionCard(context, 'Bolt', Icons.bolt, Colors.grey),
                         _buildSuggestionCard(context, 'Car', Icons.directions_car, Colors.red),
                         _buildSuggestionCard(context, 'See all', Icons.more_horiz, Colors.black),
+=======
+                        _buildSuggestionCard('Steel', Icons.build, Colors.blue),
+                        _buildSuggestionCard('Wood', Icons.build, Colors.brown),
+                        _buildSuggestionCard(
+                            'Plastic', Icons.water, Colors.green),
+                        _buildSuggestionCard('Bolt', Icons.bolt, Colors.grey),
+                        _buildSuggestionCard(
+                            'Car', Icons.directions_car, Colors.red),
+                        _buildSuggestionCard(
+                            'See all', Icons.more_horiz, Colors.black),
+>>>>>>> 90ab5938103a5b8a5fd1e47eec7a316964ab568c
                       ],
                     ),
                   ],
@@ -157,10 +206,10 @@ class _UserDashboardContentState extends State<UserDashboardContent> {
           right: 16.0,
           child: FloatingActionButton(
             onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ChatbotSupport()),
-                );
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChatbotSupport()),
+              );
             },
             backgroundColor: Color(0xFF17255A),
             foregroundColor: Colors.white,

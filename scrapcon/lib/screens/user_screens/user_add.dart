@@ -140,7 +140,7 @@ class _UserAddScreenState extends State<UserAddScreen> {
     request.files
         .add(await http.MultipartFile.fromPath('bidImage', _image!.path));
 
-    request.fields['cateogory'] = _scrapCategory;
+    request.fields['category'] = _scrapCategory;
     request.fields['quantity'] = _quantityController.text;
     request.fields['scrapquality'] = _scrapQuality.toString();
 

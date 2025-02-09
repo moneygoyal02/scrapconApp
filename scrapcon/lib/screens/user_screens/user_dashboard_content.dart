@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:provider/provider.dart';
 import '../token_provider.dart';
 import '../passwords.dart';
+import 'chatbot_support.dart';
 import 'user_message.dart';
 import 'user_add.dart';
 
@@ -156,7 +157,7 @@ class _UserDashboardContentState extends State<UserDashboardContent> {
             onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ChatPage()),
+                  MaterialPageRoute(builder: (context) => ChatbotSupport()),
                 );
             },
             backgroundColor: Color(0xFF17255A),

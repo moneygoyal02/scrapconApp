@@ -21,7 +21,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   Future<void> _signup() async {
-    final url = '${Passwords.backendUrl}/api/vendors/register'; // Use the constant
+    final url = '${Passwords.backendUrl}/api/vendors/register';
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
@@ -36,12 +36,18 @@ class _SignupScreenState extends State<SignupScreen> {
 
     if (response.statusCode == 201) {
       final data = json.decode(response.body);
-      final token = data['token']; 
-      Provider.of<TokenProvider>(context, listen: false).setToken(token); // Store token in provider
+      final token = data['token'];
+      final vendorId = data['_id'];  // Get the vendor ID from response
+      
+      // Set both token and vendor ID in the provider
+      final tokenProvider = Provider.of<TokenProvider>(context, listen: false);
+      tokenProvider.setToken(token);
+      tokenProvider.setUserId(vendorId);  // Store the vendor ID
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => VendorDashboardScreen(), 
+          builder: (context) => VendorDashboardScreen(),
         ),
       );
     } else {

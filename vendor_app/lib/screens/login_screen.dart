@@ -13,7 +13,7 @@ class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
   Future<void> _login(BuildContext context) async {
-    final url = '${Passwords.backendUrl}/api/vendors/login'; // Use the constant
+    final url = '${Passwords.backendUrl}/api/vendors/login';
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
@@ -26,14 +26,17 @@ class LoginScreen extends StatelessWidget {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       final token = data['token'];
+      final vendorId = data['_id'];  // Get the vendor ID from response
       
-      // Set the token in the provider
-      Provider.of<TokenProvider>(context, listen: false).setToken(token);
+      // Set both token and vendor ID in the provider
+      final tokenProvider = Provider.of<TokenProvider>(context, listen: false);
+      tokenProvider.setToken(token);
+      tokenProvider.setUserId(vendorId);  // Store the vendor ID
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => VendorDashboardScreen(), // Redirect to VendorDashboardScreen
+          builder: (context) => VendorDashboardScreen(),
         ),
       );
     } else {

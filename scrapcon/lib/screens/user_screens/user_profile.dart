@@ -8,7 +8,7 @@ import 'dart:convert';
 import 'package:provider/provider.dart';
 import '../token_provider.dart'; 
 import '../passwords.dart';
-import 'user_details_screen.dart'; // Add this import statement
+import 'chatbot_support.dart'; // Add this import statement
 
 class UserProfileScreen extends StatefulWidget {
   @override
@@ -100,33 +100,29 @@ Widget _buildProfileSection() {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),
-              // ElevatedButton(
-              //   onPressed: () {
-              //     if (_name != null && _email != null && _phone != null) {
-              //       Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //           builder: (context) => UserDetailsScreen(
-              //             name: _name!,
-              //             email: _email!,
-              //             phone: _phone!,
-              //           ),
-              //         ),
-              //       );
-              //     } else {
-              //       print('One or more user details are null');
-              //     }
-              //   },
-              //   style: ElevatedButton.styleFrom(
-              //     backgroundColor: Color(0xFF17255A),
-              //     foregroundColor: Colors.white,
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(8),
-              //     ),
-              //     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              //   ),
-              //   child: Text('View and Edit Profile'),
-              // ),
+              ElevatedButton(
+                onPressed: () {
+                  if (_name != null && _email != null && _phone != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatbotSupport()
+                      ),
+                    );
+                  } else {
+                    print('One or more user details are null');
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF17255A),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                ),
+                child: Text('View and Edit Profile'),
+              ),
             ],
           ),
         ],

@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:provider/provider.dart';
 import '../token_provider.dart';
 import '../passwords.dart';
-import 'user_message.dart';
+import 'chatbot_support.dart';
 class UserDashboardContent extends StatefulWidget {
   @override
   _UserDashboardContentState createState() => _UserDashboardContentState();
@@ -117,10 +117,11 @@ class _UserDashboardContentState extends State<UserDashboardContent> {
             onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ChatPage()),
+                  MaterialPageRoute(builder: (context) => ChatbotSupport()),
                 );
             },
             backgroundColor: Color(0xFF17255A),
+            foregroundColor: Colors.white,
             child: Icon(Icons.support_agent),
           ),
         ),

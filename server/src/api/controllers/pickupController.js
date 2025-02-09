@@ -43,7 +43,7 @@ export const requestPickup = async (req, res, next) => {
       throw new Error('Customer address not found');
     }
 
-    // Upload image to Cloudinary using the in-memory file (buffer)
+    
     const imageUrl = await uploadImage(req.file);
 
     const pickup = new Pickup({

@@ -213,9 +213,8 @@ export const updateBidAmount = async (req, res, next) => {
       throw new Error("Bid amount not found");
     }
 
-    // Update only the highestBid or any other field if necessary
     bidAmount.highestBid = req.body.highestBid ?? bidAmount.highestBid;
-    // You can add more fields to update if needed
+    
 
     const updatedBidAmount = await bidAmount.save();
 

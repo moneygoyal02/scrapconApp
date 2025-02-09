@@ -42,9 +42,10 @@ class _ChatbotSupportState extends State<ChatbotSupport> {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
+      print(data);
       setState(() {
         messages.add(ChatMessage(
-          text: data['response'],
+          text: data['candidates'][0]['content']['parts'][0]['text'],
           user: bot,
           createdAt: DateTime.now(),
         ));
@@ -70,6 +71,7 @@ class _ChatbotSupportState extends State<ChatbotSupport> {
       ),
       body: DashChat(
         currentUser: user,
+        
         messages: messages,
         onSend: _sendMessage,
         inputOptions: InputOptions(
@@ -88,7 +90,7 @@ class _ChatbotSupportState extends State<ChatbotSupport> {
           messageDecorationBuilder:
               (ChatMessage msg, ChatMessage? prevMsg, ChatMessage? nextMsg) {
             return BoxDecoration(
-              color: msg.user.id == user.id ? Colors.blue : Colors.grey,
+              color: msg.user.id == user.id ? Color(0xFF17255A) : Color(0x79AAF0),
               borderRadius: BorderRadius.circular(10),
             );
           },

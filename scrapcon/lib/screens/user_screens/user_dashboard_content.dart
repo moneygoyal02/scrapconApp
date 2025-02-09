@@ -121,7 +121,6 @@ class _UserDashboardContentState extends State<UserDashboardContent> {
                 );
             },
             backgroundColor: Color(0xFF17255A),
-            foregroundColor: Colors.white,
             child: Icon(Icons.support_agent),
           ),
         ),

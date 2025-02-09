@@ -206,16 +206,17 @@ class _UserAddScreenState extends State<UserAddScreen> {
                       width: 200.0,
                     ),
                   SizedBox(height: 10.0),
-                  TextButton(
-                      onPressed: () {},
-                      style: ButtonStyle(
-                        backgroundColor:
-                            WidgetStateProperty.all(Color(0xFF17255A)),
-                      ),
-                      child: Text(
-                        'Scrap Category: $_scrapCategory',
-                        style: TextStyle(color: Colors.white),
-                      )),
+                  if (_scrapCategory == '')
+                    TextButton(
+                        onPressed: () {},
+                        style: ButtonStyle(
+                          backgroundColor:
+                              WidgetStateProperty.all(Color(0xFF17255A)),
+                        ),
+                        child: Text(
+                          'Scrap Category: $_scrapCategory',
+                          style: TextStyle(color: Colors.white),
+                        )),
                   SizedBox(height: 10.0),
                   Padding(
                       padding: EdgeInsets.all(10.0),

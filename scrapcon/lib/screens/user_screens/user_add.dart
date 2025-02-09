@@ -110,6 +110,7 @@ class _UserAddScreenState extends State<UserAddScreen> {
             _showErrorDialog('ERROR: ${response.body} ${response.statusCode}');
           } else {
             _scrapCategory = _detectedObjects![0]['name'];
+            _scrapQuality = _detectedObjects![0]['score'];
           }
         });
       } else {

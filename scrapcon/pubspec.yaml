@@ -45,6 +45,7 @@ dependencies:
   open_filex: ^4.6.0
   flutter_local_notifications: ^18.0.1
   provider: ^6.1.2
+  dash_chat_2: ^0.0.21
 dev_dependencies:
   flutter_test:
     sdk: flutter

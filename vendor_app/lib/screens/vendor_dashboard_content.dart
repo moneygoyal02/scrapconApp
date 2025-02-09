@@ -1,6 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'passwords.dart';
+import 'dart:async';
 
-class VendorDashboardContent extends StatelessWidget {
+class VendorDashboardContent extends StatefulWidget {
+  @override
+  _VendorDashboardContentState createState() => _VendorDashboardContentState();
+}
+
+class _VendorDashboardContentState extends State<VendorDashboardContent> {
+  List<dynamic> _bids = [];
+  bool _isLoading = true;
+  Timer? _refreshTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchBids();
+    // Set up periodic refresh every 10 seconds
+    _refreshTimer = Timer.periodic(Duration(seconds: 10), (timer) {
+      _fetchBids();
+    });
+  }
+
+  @override
+  void dispose() {
+    _refreshTimer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _fetchBids() async {
+    try {
+      final url = '${Passwords.backendUrl}/api/bids/getAllWp';
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success'] == true && data['bids'] != null) {
+          setState(() {
+            _bids = data['bids'];
+            _isLoading = false;
+          });
+        } else {
+          print('Failed to fetch bids: ${response.body}');
+          setState(() => _isLoading = false);
+        }
+      } else {
+        print('Failed to fetch bids: ${response.body}');
+        setState(() => _isLoading = false);
+      }
+    } catch (error) {
+      print('Error fetching bids: $error');
+      setState(() => _isLoading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -9,20 +64,47 @@ class VendorDashboardContent extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // Hardcoded list items
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      leading: Icon(Icons.timer_outlined),
-                      title: Text('Wood'),
-                      subtitle: Text('To: ABC Scrapers'),
-                      trailing: Text('x20\n\$400'),
-                    );
-                  },
-                ),
+                // Dynamic list items from API
+                _isLoading
+                    ? Center(child: CircularProgressIndicator())
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: _bids.length,
+                        itemBuilder: (context, index) {
+                          final bid = _bids[index];
+                          String category = '';
+                          String quantity = '';
+                          
+                          // Handle both direct category and items array
+                          if (bid['category'] != null) {
+                            category = bid['category'].replaceAll('"', '');
+                          } else if (bid['items'] != null) {
+                            try {
+                              final items = json.decode(bid['items']);
+                              if (items is List && items.isNotEmpty) {
+                                category = items[0]['category'] ?? '';
+                                quantity = items[0]['quantity']?.toString() ?? '';
+                              }
+                            } catch (e) {
+                              print('Error parsing items: $e');
+                            }
+                          }
+
+                          // Use direct quantity if available, otherwise use from items
+                          quantity = bid['quantity']?.toString() ?? quantity;
+
+                          return ListTile(
+                            leading: Icon(Icons.timer_outlined),
+                            title: Text(category),
+                            subtitle: Text('To: ${bid['customer']['name']}'),
+                            trailing: Text(
+                              'x$quantity\n\$${bid['amount'] ?? '0'}',
+                              textAlign: TextAlign.end,
+                            ),
+                          );
+                        },
+                      ),
                 SizedBox(height: 20),
                 // Suggestions section
                 Padding(
@@ -30,7 +112,13 @@ class VendorDashboardContent extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Suggestions', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      Text(
+                        'Suggestions',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
                   ),
                 ),

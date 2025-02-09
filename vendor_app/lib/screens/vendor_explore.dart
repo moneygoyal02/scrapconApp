@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'passwords.dart';
 import 'package:provider/provider.dart';
 import '../token_provider.dart';
+import 'dart:async';
 
 class VendorExploreScreen extends StatefulWidget {
   @override
@@ -13,11 +14,22 @@ class VendorExploreScreen extends StatefulWidget {
 class _VendorExploreScreenState extends State<VendorExploreScreen> {
   List<dynamic> _bids = [];
   bool _isLoading = true;
+  Timer? _refreshTimer;  // Add timer for periodic updates
 
   @override
   void initState() {
     super.initState();
     _fetchBids();
+    // Set up periodic refresh every 10 seconds
+    _refreshTimer = Timer.periodic(Duration(seconds: 10), (timer) {
+      _fetchBids();
+    });
+  }
+
+  @override
+  void dispose() {
+    _refreshTimer?.cancel();  // Cancel timer when disposing
+    super.dispose();
   }
 
   Future<void> _fetchBids() async {
@@ -111,7 +123,7 @@ class _VendorExploreScreenState extends State<VendorExploreScreen> {
       final url = '${Passwords.backendUrl}/api/bids';
       final tokenProvider = Provider.of<TokenProvider>(context, listen: false);
       final token = tokenProvider.token;
-      final vendorId = tokenProvider.userId;  // Get the logged-in vendor's ID
+      final vendorId = tokenProvider.userId;
 
       final response = await http.post(
         Uri.parse(url),
@@ -120,7 +132,7 @@ class _VendorExploreScreenState extends State<VendorExploreScreen> {
           'Authorization': 'Bearer $token',
         },
         body: json.encode({
-          'vendor': vendorId,  // Use the logged-in vendor's ID
+          'vendor': vendorId,
           'bid': bidId,
           'highestBid': bidAmount,
         }),
@@ -132,8 +144,8 @@ class _VendorExploreScreenState extends State<VendorExploreScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Bid placed successfully!')),
           );
-          // Refresh the bids after successful placement
-          _fetchBids();
+          // Immediately fetch updated bids after placing a bid
+          await _fetchBids();
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Failed to place bid: ${data['message']}')),
@@ -182,7 +194,7 @@ class _VendorExploreScreenState extends State<VendorExploreScreen> {
                   quantity: quantity,
                   location: location,
                   dueDate: bid['scheduledDate'] ?? 'No date available',
-                  leadingBid: '\$${bid['amount'] ?? '0'}',
+                  leadingBid: '\$${bid['highestBid'] ?? '0'}',
                   imageUrl: bid['image'] ?? '',
                   onTap: () {
                     _showBidPopup(
@@ -192,7 +204,7 @@ class _VendorExploreScreenState extends State<VendorExploreScreen> {
                       location,
                       quantity,
                       bid['scheduledDate'] ?? 'No date available',
-                      '\$${bid['amount'] ?? '0'}',
+                      '\$${bid['highestBid'] ?? '0'}',
                     );
                   },
                 );

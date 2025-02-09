@@ -121,7 +121,7 @@ Widget _buildProfileSection() {
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 ),
-                child: Text('View and Edit Profile'),
+                child: Text('Chat with Scrapcon'),
               ),
             ],
           ),

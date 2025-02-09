@@ -113,11 +113,23 @@ export const createBidAmount = async (req, res, next) => {
     // Assume the authenticated user is the customer placing the bid
     const customer = req.user._id;
 
+    // Find the current highest bid for the given bid
+    const currentHighestBidDoc = await BidAmount.findOne({ bid }).sort({ highestBid: -1 }).exec();
+
+    // If there's an existing bid and the new bid is not higher, throw an error
+    if (currentHighestBidDoc && highestBid <= currentHighestBidDoc.highestBid) {
+      res.status(400);
+      throw new Error(
+        `Your bid must be higher than the current highest bid of ${currentHighestBidDoc.highestBid}`
+      );
+    }
+
+    // Create and save the new bid amount
     const newBidAmount = new BidAmount({
       customer,
       vendor,
       bid,
-      highestBid, // You can omit this if you want the default value (0) to be used
+      highestBid,
     });
 
     const savedBidAmount = await newBidAmount.save();
@@ -130,6 +142,7 @@ export const createBidAmount = async (req, res, next) => {
     next(error);
   }
 };
+
 
 // Get all bid amount entries
 export const getAllBidAmounts = async (req, res, next) => {

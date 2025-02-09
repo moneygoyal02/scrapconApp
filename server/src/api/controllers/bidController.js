@@ -6,7 +6,7 @@ import { uploadImage } from "../../services/cloudinaryService.js";
 
 export const placeBid = async (req, res, next) => {
   try {
-    const { scheduledDate, items } = req.body;
+    const { scheduledDate, category ,scrapquality,quantity  } = req.body;
     
     // Check if file exists in the request
     if (!req.file || !req.file.buffer) {
@@ -43,8 +43,10 @@ export const placeBid = async (req, res, next) => {
       customer: customer._id,
       scheduledDate,
       address: address._id,
-      items,
       image: imageUrl,
+      category,
+      quantity,
+      scrapquality,
     });
 
     const savedBid = await bid.save();

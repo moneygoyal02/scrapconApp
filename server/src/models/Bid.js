@@ -16,10 +16,18 @@ const BidSchema = new mongoose.Schema(
       ref: "UserAddress",
       required: true,
     },
-    items: {
+    category: {
       type: String,
       required: true,
     },
+    quantity: {
+        type: Number,
+        required: true,
+        },
+        scrapquality: {
+            type: Number,
+            required: true,
+            },
     isLive: {
       type: Boolean,
       default: true,

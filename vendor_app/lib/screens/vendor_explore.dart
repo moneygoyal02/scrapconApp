@@ -167,6 +167,7 @@ class _VendorExploreScreenState extends State<VendorExploreScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Vendor Explore')),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : ListView.builder(

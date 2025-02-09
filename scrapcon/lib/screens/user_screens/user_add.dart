@@ -142,7 +142,7 @@ class _UserAddScreenState extends State<UserAddScreen> {
 
     request.fields['cateogory'] = _scrapCategory;
     request.fields['quantity'] = _quantityController.text;
-    request.fields['scrapQuality'] = _scrapQuality.toString();
+    request.fields['scrapquality'] = _scrapQuality.toString();
 
     final response = await request.send();
 

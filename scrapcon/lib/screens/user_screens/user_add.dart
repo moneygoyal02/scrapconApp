@@ -206,7 +206,7 @@ class _UserAddScreenState extends State<UserAddScreen> {
                       width: 200.0,
                     ),
                   SizedBox(height: 10.0),
-                  if (_scrapCategory == '')
+                  if (_scrapCategory != '')
                     TextButton(
                         onPressed: () {},
                         style: ButtonStyle(
@@ -215,7 +215,8 @@ class _UserAddScreenState extends State<UserAddScreen> {
                         ),
                         child: Text(
                           'Scrap Category: $_scrapCategory',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
                         )),
                   SizedBox(height: 10.0),
                   Padding(

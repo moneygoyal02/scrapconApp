@@ -88,11 +88,11 @@ class _UserDashboardContentState extends State<UserDashboardContent> {
                             : ListView.builder(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
-                                itemCount: _bids.length,
+                                itemCount: min(_bids.length, 3),
                                 itemBuilder: (context, index) {
                                   final bid = _bids[index];
-                                  final items = json.decode(bid['items']);
-                                  final firstItem = items[0];
+                                  final category = bid['category'];
+                                  final quantity = bid['quantity'];
 
                                   return Card(
                                     margin: EdgeInsets.symmetric(
@@ -100,7 +100,7 @@ class _UserDashboardContentState extends State<UserDashboardContent> {
                                     child: ListTile(
                                       leading: Icon(Icons.timer_outlined,
                                           color: Color(0xFF17255A)),
-                                      title: Text('${firstItem['category']}'),
+                                      title: Text('$category'),
                                       subtitle: Text(
                                           'To: ${bid['address']['city']}, ${bid['address']['state']}'),
                                       trailing: Column(
@@ -110,7 +110,7 @@ class _UserDashboardContentState extends State<UserDashboardContent> {
                                             CrossAxisAlignment.end,
                                         children: [
                                           Text(
-                                              '${firstItem['quantity']} ${firstItem['unit']}'),
+                                              '$quantity'),
                                           Text(
                                             bid['isLive']
                                                 ? 'Active'

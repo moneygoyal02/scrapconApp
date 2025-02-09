@@ -15,6 +15,7 @@ class UserProfileScreen extends StatefulWidget {
   _UserProfileScreenState createState() => _UserProfileScreenState();
 }
 
+```dart
 class _UserProfileScreenState extends State<UserProfileScreen> {
   String? _name;
   String? _email;
@@ -25,6 +26,188 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     super.initState();
     _fetchUserProfile();
   }
+
+  Future<void> _fetchUserProfile() async {
+    final token = Provider.of<TokenProvider>(context, listen: false).token;
+
+    final url = '${Passwords.backendUrl}/api/users/profile'; // Use the constant
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token', // Include the token in the headers
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (mounted) { // Check if the widget is still mounted
+        setState(() {
+          _name = data['name'];
+          _email = data['email'];
+          _phone = data['phone'];
+        });
+      }
+    } else {
+      print('Failed to fetch user profile: ${response.body}');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildProfileSection(),
+            SizedBox(height: 20),
+            _buildSettingsOptions(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfileSection() {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 30,
+              backgroundColor: Colors.grey.shade300,
+              child: Text(
+                _name != null && _name!.isNotEmpty ? _name![0].toUpperCase() : 'G',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.deepPurple,
+                ),
+              ),
+            ),
+            SizedBox(width: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _name ?? 'Loading...',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_name != null && _email != null && _phone != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UserDetailsScreen(
+                            name: _name!,
+                            email: _email!,
+                            phone: _phone!,
+                            businessName: 'Your Business Name', // Add the required argument
+                            ownerName: 'Your Owner Name', // Add the required argument
+                          ),
+                        ),
+                      );
+                    } else {
+                      print('One or more user details are null');
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF17255A),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  ),
+                  child: Text('View and Edit Profile'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSettingsOptions(BuildContext context) {
+    return Column(
+      children: [
+        _buildSettingsTile(
+          context: context,
+          icon: MdiIcons.package,
+          title: 'My Ads',
+          subtitle: 'View your active and inactive ads',
+          destination: BuyPackagesScreen(),
+        ),
+        _buildSettingsTile(
+          context: context,
+          icon: MdiIcons.cog,
+          title: 'Settings',
+          subtitle: 'Privacy and logout',
+          destination: SettingsScreen(),
+        ),
+        _buildSettingsTile(
+          context: context,
+          icon: MdiIcons.helpCircleOutline,
+          title: 'Help and Support',
+          subtitle: 'Help center, Terms and conditions, Privacy policy',
+          destination: HelpAndSupportScreen(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSettingsTile({
+    required BuildContext context,
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required Widget destination,
+  }) {
+    return ListTile(
+      leading: Icon(icon, size: 30, color: const Color(0xFF17255A)),
+      title: Text(
+        title,
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      ),
+      subtitle: Text(
+        subtitle,
+        style: const TextStyle(fontSize: 14, color: Colors.grey),
+      ),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => destination),
+        );
+      },
+    );
+  }
+}
+
+class UserDetailsScreen extends StatelessWidget {
+  final String name;
+  final String email;
+  final String phone;
+  final String businessName;
+  final String ownerName;
+
+  UserDetailsScreen({
+    required this.name,
+    required this.email,
+    required this.phone,
+    required this.businessName,
+    required this.ownerName,
+  });
 
   Future<void> _fetchUserProfile() async {
     final token = Provider.of<TokenProvider>(context, listen: false).token;
@@ -110,6 +293,8 @@ Widget _buildProfileSection() {
                           name: _name!,
                           email: _email!,
                           phone: _phone!,
+                          businessName: 'Your Business Name', // Add the required argument
+                          ownerName: 'Your Owner Name', // Add the required argument
                         ),
                       ),
                     );

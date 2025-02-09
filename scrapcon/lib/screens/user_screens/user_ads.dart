@@ -35,19 +35,7 @@ class _UserAdsScreenState extends State<UserAdsScreen> {
 
     try {
       final url = '${Passwords.backendUrl}/api/bids/getAllWp';
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      ).timeout(
-        Duration(seconds: 10),
-        onTimeout: () {
-          throw TimeoutException('Connection timeout. Please try again.');
-        },
-      );
-
-      if (!mounted) return;
+      final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -57,10 +45,12 @@ class _UserAdsScreenState extends State<UserAdsScreen> {
             _isLoading = false;
           });
         }
+      } else {
+        print('Failed to fetch bids: ${response.body}');
+        setState(() => _isLoading = false);
       }
     } catch (error) {
       print('Error fetching bids: $error');
-      if (!mounted) return;
       setState(() => _isLoading = false);
     }
   }
@@ -129,34 +119,33 @@ class _UserAdsScreenState extends State<UserAdsScreen> {
               itemCount: _bids.length,
               itemBuilder: (context, index) {
                 final bid = _bids[index];
+
+                // Extracting data from the API response
+                final formattedCategory = bid['category']?.toString().replaceAll('"', '') ?? 'Unknown';
+                final quantity = bid['quantity'] ?? 0;
+                final formattedLocation = bid['address'] != null 
+                    ? '${bid['address']['city']}, ${bid['address']['state']}'
+                    : 'Location not available';
                 
-                // Format the date
+                // Format the scheduled date
                 final scheduledDate = DateTime.parse(bid['scheduledDate']);
                 final now = DateTime.now();
                 final difference = scheduledDate.difference(now).inDays;
                 final dueDate = difference > 0 ? '${difference}d left' : '${-difference}d ago';
 
-                // Get location
-                final location = bid['address'] != null 
-                    ? '${bid['address']['city']}, ${bid['address']['state']}'
-                    : 'Location not available';
-
-                // Clean up category (remove quotes)
-                final category = bid['category']?.toString().replaceAll('"', '') ?? 'Unknown';
-
                 return AdCard(
-                  title: category,
-                  quantity: bid['quantity'] ?? 0,
-                  location: location,
+                  title: formattedCategory,
+                  quantity: quantity,
+                  location: formattedLocation,
                   dueDate: dueDate,
                   leadingBid: "\$${bid['amount'] ?? '0'}",
                   imageUrl: bid['image'] ?? "https://media.istockphoto.com/id/151540540/photo/crane-picking-up-car.jpg?s=2048x2048&w=is&k=20&c=nr6Cwhy-7tBaJCNRQ8m1qO0CshPm5WpxO3pEiRZlq9w=",
                   onTap: () {
                     _showBidPopup(
                       context,
-                      category,
-                      location,
-                      bid['quantity'] ?? 0,
+                      formattedCategory,
+                      formattedLocation,
+                      quantity,
                       dueDate,
                       "\$${bid['amount'] ?? '0'}",
                     );

@@ -81,72 +81,48 @@ class _UserDashboardContentState extends State<UserDashboardContent> {
                 child: Column(
                   children: [
                     // Bids list
-                                       _isLoading
+                    _isLoading
                         ? Center(child: CircularProgressIndicator())
-<<<<<<< HEAD
                         : _bids.isEmpty
                             ? _buildNoBidsPlaceholder()
                             : ListView.builder(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
-                                itemCount: _bids.length,
+                                itemCount: min(_bids.length, 3),
                                 itemBuilder: (context, index) {
                                   final bid = _bids[index];
-                                  final items = json.decode(bid['items']);
-                                  final firstItem = items[0];
+                                  final category = bid['category'];
+                                  final quantity = bid['quantity'];
 
                                   return Card(
-                                    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                    margin: EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 8),
                                     child: ListTile(
-                                      leading: Icon(Icons.timer_outlined, color: Color(0xFF17255A)),
-                                      title: Text('${firstItem['category']}'),
-                                      subtitle: Text('To: ${bid['address']['city']}, ${bid['address']['state']}'),
+                                      leading: Icon(Icons.timer_outlined,
+                                          color: Color(0xFF17255A)),
+                                      title: Text('$category'),
+                                      subtitle: Text(
+                                          'To: ${bid['address']['city']}, ${bid['address']['state']}'),
                                       trailing: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
                                         children: [
-                                          Text('${firstItem['quantity']} ${firstItem['unit']}'),
                                           Text(
-                                            bid['isLive'] ? 'Active' : 'Inactive',
+                                              '$quantity'),
+                                          Text(
+                                            bid['isLive']
+                                                ? 'Active'
+                                                : 'Inactive',
                                             style: TextStyle(
-                                              color: bid['isLive'] ? Colors.green : Colors.red,
+                                              color: bid['isLive']
+                                                  ? Colors.green
+                                                  : Colors.red,
                                               fontSize: 12,
                                             ),
                                           ),
                                         ],
-=======
-                        : ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: min(_bids.length, 3),
-                            itemBuilder: (context, index) {
-                              final bid = _bids[index];
-                              final category = bid['category'];
-                              final quantity = bid['quantity'];
-
-                              return Card(
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 8),
-                                child: ListTile(
-                                  leading: Icon(Icons.timer_outlined,
-                                      color: Color(0xFF17255A)),
-                                  title: Text('$category'),
-                                  subtitle: Text(
-                                      'To: ${bid['address']['city']}, ${bid['address']['state']}'),
-                                  trailing: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text('$quantity'),
-                                      Text(
-                                        bid['isLive'] ? 'Active' : 'Inactive',
-                                        style: TextStyle(
-                                          color: bid['isLive']
-                                              ? Colors.green
-                                              : Colors.red,
-                                          fontSize: 12,
-                                        ),
->>>>>>> 90ab5938103a5b8a5fd1e47eec7a316964ab568c
                                       ),
                                     ),
                                   );
@@ -175,24 +151,18 @@ class _UserDashboardContentState extends State<UserDashboardContent> {
                       crossAxisSpacing: 10,
                       childAspectRatio: 1.5,
                       children: [
-<<<<<<< HEAD
-                        _buildSuggestionCard(context, 'Steel', Icons.build, Colors.blue),
-                        _buildSuggestionCard(context, 'Wood', Icons.build, Colors.brown),
-                        _buildSuggestionCard(context, 'Plastic', Icons.water, Colors.green),
-                        _buildSuggestionCard(context, 'Bolt', Icons.bolt, Colors.grey),
-                        _buildSuggestionCard(context, 'Car', Icons.directions_car, Colors.red),
-                        _buildSuggestionCard(context, 'See all', Icons.more_horiz, Colors.black),
-=======
-                        _buildSuggestionCard('Steel', Icons.build, Colors.blue),
-                        _buildSuggestionCard('Wood', Icons.build, Colors.brown),
                         _buildSuggestionCard(
-                            'Plastic', Icons.water, Colors.green),
-                        _buildSuggestionCard('Bolt', Icons.bolt, Colors.grey),
+                            context, 'Steel', Icons.build, Colors.blue),
                         _buildSuggestionCard(
-                            'Car', Icons.directions_car, Colors.red),
+                            context, 'Wood', Icons.build, Colors.brown),
                         _buildSuggestionCard(
-                            'See all', Icons.more_horiz, Colors.black),
->>>>>>> 90ab5938103a5b8a5fd1e47eec7a316964ab568c
+                            context, 'Plastic', Icons.water, Colors.green),
+                        _buildSuggestionCard(
+                            context, 'Bolt', Icons.bolt, Colors.grey),
+                        _buildSuggestionCard(
+                            context, 'Car', Icons.directions_car, Colors.red),
+                        _buildSuggestionCard(
+                            context, 'See all', Icons.more_horiz, Colors.black),
                       ],
                     ),
                   ],
@@ -220,7 +190,7 @@ class _UserDashboardContentState extends State<UserDashboardContent> {
     );
   }
 
-   Widget _buildNoBidsPlaceholder() {
+  Widget _buildNoBidsPlaceholder() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -241,7 +211,8 @@ class _UserDashboardContentState extends State<UserDashboardContent> {
     );
   }
 
-  Widget _buildSuggestionCard(BuildContext context, String title, IconData icon, Color color) {
+  Widget _buildSuggestionCard(
+      BuildContext context, String title, IconData icon, Color color) {
     return InkWell(
       onTap: () {
         Navigator.push(

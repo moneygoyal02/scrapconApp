@@ -100,7 +100,7 @@ class _UserAddScreenState extends State<UserAddScreen> {
         headers: {'Content-Type': 'application/json'},
       );
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
         setState(() {
           _detectedObjects = jsonData['objects'];
@@ -140,16 +140,16 @@ class _UserAddScreenState extends State<UserAddScreen> {
     request.files
         .add(await http.MultipartFile.fromPath('bidImage', _image!.path));
 
-    request.fields['cateogory'] = _scrapCategory;
+    request.fields['category'] = _scrapCategory;
     request.fields['quantity'] = _quantityController.text;
-    request.fields['scrapQuality'] = _scrapQuality.toString();
+    request.fields['scrapquality'] = _scrapQuality.toString();
 
     final response = await request.send();
 
     setState(() {
       _isLoading = false;
     });
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       // ignore: use_build_context_synchronously
       Navigator.of(context).push(MaterialPageRoute(
           builder: (BuildContext context) => UserActivityScreen()));

@@ -1,28 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import '../passwords.dart';
+import 'dart:async';
 import 'user_bids.dart';
 
-class UserAdsScreen extends StatelessWidget {
+class UserAdsScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView.builder(
-        padding: EdgeInsets.all(16.0),
-        itemCount: 3, // Example item count
-        itemBuilder: (context, index) {
-          return AdCard(
-            title: "Wood",
-            quantity: 15,
-            location: "Sector 80, AB Road, Delhi, India",
-            dueDate: "5d ago",
-            leadingBid: "\$100",
-            imageUrl: "https://media.istockphoto.com/id/151540540/photo/crane-picking-up-car.jpg?s=2048x2048&w=is&k=20&c=nr6Cwhy-7tBaJCNRQ8m1qO0CshPm5WpxO3pEiRZlq9w=",
-            onTap: () {
-              _showBidPopup(context, "Wood", "Sector 80, AB Road, Delhi, India", 15, "5d ago", "\$100");
-            },
-          );
-        },
-      ),
-    );
+  _UserAdsScreenState createState() => _UserAdsScreenState();
+}
+
+class _UserAdsScreenState extends State<UserAdsScreen> {
+  List<dynamic> _bids = [];
+  bool _isLoading = true;
+  Timer? _refreshTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchBids();
+    _refreshTimer = Timer.periodic(Duration(seconds: 15), (timer) {
+      if (mounted) _fetchBids();
+    });
+  }
+
+  @override
+  void dispose() {
+    _refreshTimer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _fetchBids() async {
+    if (!mounted) return;
+
+    try {
+      final url = '${Passwords.backendUrl}/api/bids/getAllWp';
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success'] == true && data['bids'] != null) {
+          setState(() {
+            _bids = data['bids'];
+            _isLoading = false;
+          });
+        }
+      } else {
+        print('Failed to fetch bids: ${response.body}');
+        setState(() => _isLoading = false);
+      }
+    } catch (error) {
+      print('Error fetching bids: $error');
+      setState(() => _isLoading = false);
+    }
   }
 
   void _showBidPopup(BuildContext context, String title, String location, int quantity, String dueDate, String leadingBid) {
@@ -79,6 +109,52 @@ class UserAdsScreen extends StatelessWidget {
       },
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: _bids.length,
+              itemBuilder: (context, index) {
+                final bid = _bids[index];
+
+                // Extracting data from the API response
+                final formattedCategory = bid['category']?.toString().replaceAll('"', '') ?? 'Unknown';
+                final quantity = bid['quantity'] ?? 0;
+                final formattedLocation = bid['address'] != null 
+                    ? '${bid['address']['city']}, ${bid['address']['state']}'
+                    : 'Location not available';
+                
+                // Format the scheduled date
+                final scheduledDate = DateTime.parse(bid['scheduledDate']);
+                final now = DateTime.now();
+                final difference = scheduledDate.difference(now).inDays;
+                final dueDate = difference > 0 ? '${difference}d left' : '${-difference}d ago';
+
+                return AdCard(
+                  title: formattedCategory,
+                  quantity: quantity,
+                  location: formattedLocation,
+                  dueDate: dueDate,
+                  leadingBid: "\$${bid['amount'] ?? '0'}",
+                  imageUrl: bid['image'] ?? "https://media.istockphoto.com/id/151540540/photo/crane-picking-up-car.jpg?s=2048x2048&w=is&k=20&c=nr6Cwhy-7tBaJCNRQ8m1qO0CshPm5WpxO3pEiRZlq9w=",
+                  onTap: () {
+                    _showBidPopup(
+                      context,
+                      formattedCategory,
+                      formattedLocation,
+                      quantity,
+                      dueDate,
+                      "\$${bid['amount'] ?? '0'}",
+                    );
+                  },
+                );
+              },
+            ),
+    );
+  }
 }
 
 class AdCard extends StatelessWidget {
@@ -108,9 +184,9 @@ class AdCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.network(imageUrl, height: 250, fit: BoxFit.cover),
+          Center(child: Image.network(imageUrl, height: 150, fit: BoxFit.contain)),
           Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
